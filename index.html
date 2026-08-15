@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K3D Rádió</title>
-    <link rel="icon" type="image/png" sizes="192x192" href="grass.png">
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome ikonok -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Retro Pixel Betűtípus -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -171,7 +173,7 @@
             <span class="text-[9px] text-gray-300"><i class="fa-solid fa-user text-xs text-yellow-400 mr-1"></i><span id="listener-count">1</span></span>
         </div>
 
-        <!-- Fejléc -->
+        <!-- Fejléc (Kép teljesen eltávolítva) -->
         <div class="mc-header py-7 px-6 text-left">
             <h1 class="text-xl sm:text-2xl text-yellow-300 tracking-wider drop-shadow-[3px_3px_0_#000]">
                 K3D RÁDIÓ
@@ -271,7 +273,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // --- VALÓS IDEJŰ HALLGATÓSZÁM (FIREBASE KONFIGURÁCIÓ) ---
         const firebaseConfig = {
             apiKey: "IDE_JÖN_A_SAJÁT_API_KULCSOD",
             authDomain: "sajat-projekt.firebaseapp.com",
