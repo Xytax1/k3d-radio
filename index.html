@@ -92,7 +92,7 @@
             height: 10px;
         }
 
-        input[type=range]:not(:disabled)::-webkit-slider-thumb {
+        input[type=range]:not(:disabled):::-webkit-slider-thumb {
             -webkit-appearance: none;
             height: 22px;
             width: 12px;
@@ -157,7 +157,7 @@
                     <span>Kattints a lejátszásra!</span>
                 </div>
 
-                <!-- Tekerő csúszka (Letiltva, hogy ne lehessen húzni) -->
+                <!-- Tekerő csúszka (Letiltva) -->
                 <div id="seek-container" class="bg-[#111111] p-3 border-2 border-black">
                     <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" disabled class="w-full mb-2 opacity-90 cursor-not-allowed">
                     <div class="flex justify-between text-[9px] text-gray-300 items-center">
@@ -202,6 +202,7 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
+        // Összes dal egyetlen listában (magyar és angol vegyesen)
         const tracks = [
             { name: '🇭🇺 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc' },
             { name: '🇭🇺 Tankcsapda - Mennyország tourist', id: '270yvW1_l-E' },
@@ -285,6 +286,7 @@
                 ytPlayer.playVideo();
                 isPaused = false;
             } else {
+                // Teljesen véletlenszerű (random) sorsolás az összes szám közül
                 currentTrackIndex = Math.floor(Math.random() * tracks.length);
                 const track = tracks[currentTrackIndex];
                 playlistTitle.textContent = track.name;
