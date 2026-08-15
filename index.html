@@ -92,13 +92,22 @@
             height: 10px;
         }
 
-        input[type=range]::-webkit-slider-thumb {
+        input[type=range]:not(:disabled)::-webkit-slider-thumb {
             -webkit-appearance: none;
             height: 22px;
             width: 12px;
             background: #55ff55;
             border: 2px solid #000000;
             cursor: pointer;
+        }
+
+        input[type=range]:disabled::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 22px;
+            width: 12px;
+            background: #55ff55;
+            border: 2px solid #000000;
+            cursor: default;
         }
 
         #youtube-player-container {
@@ -148,9 +157,9 @@
                     <span>Kattints a lejátszásra!</span>
                 </div>
 
-                <!-- Tekerő csúszka -->
+                <!-- Tekerő csúszka (Letiltva, hogy ne lehessen húzni) -->
                 <div id="seek-container" class="bg-[#111111] p-3 border-2 border-black">
-                    <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" class="w-full cursor-pointer mb-2">
+                    <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" disabled class="w-full mb-2 opacity-90 cursor-not-allowed">
                     <div class="flex justify-between text-[9px] text-gray-300 items-center">
                         <span class="text-red-500 font-bold flex items-center gap-1">
                             <span class="live-dot">●</span> ÉLŐ
@@ -220,7 +229,6 @@
         let isMuted = false;
         let currentSpeed = 1.0;
         let previousVolume = 80;
-        let isSeeking = false;
         let progressInterval = null;
 
         const playlistTitle = document.getElementById('playlist-title');
@@ -349,7 +357,6 @@
         }
 
         function updateProgress() {
-            if (isSeeking) return;
             let current = 0;
             let duration = 0;
             if (ytPlayer && ytPlayer.getCurrentTime) {
@@ -368,21 +375,6 @@
             const secs = Math.floor(seconds % 60);
             return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
-
-        seekSlider.addEventListener('mousedown', () => isSeeking = true);
-        seekSlider.addEventListener('touchstart', () => isSeeking = true);
-
-        seekSlider.addEventListener('change', (e) => {
-            const targetPercent = parseFloat(e.target.value);
-            if (ytPlayer && ytPlayer.getDuration) {
-                const duration = ytPlayer.getDuration();
-                if (duration > 0) {
-                    const seekToSec = (targetPercent / 100) * duration;
-                    ytPlayer.seekTo(seekToSec, true);
-                }
-            }
-            isSeeking = false;
-        });
 
         function setPlaybackSpeed(speed, btnElement) {
             playClickSound();
