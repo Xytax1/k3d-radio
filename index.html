@@ -92,22 +92,15 @@
             height: 10px;
         }
 
-        input[type=range]:not(:disabled):::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 22px;
-            width: 12px;
-            background: #55ff55;
-            border: 2px solid #000000;
-            cursor: pointer;
-        }
-
-        input[type=range]:disabled::-webkit-slider-thumb {
+        /* Zöld téglalap alakú csúszka fülek (stílus visszaállítva) */
+        input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             height: 22px;
             width: 12px;
             background: #55ff55;
             border: 2px solid #000000;
             cursor: default;
+            border-radius: 0px;
         }
 
         #youtube-player-container {
@@ -157,9 +150,9 @@
                     <span>Kattints a lejátszásra!</span>
                 </div>
 
-                <!-- Tekerő csúszka (Letiltva) -->
+                <!-- Tekerő csúszka (Letiltva, zöld téglalap füllel) -->
                 <div id="seek-container" class="bg-[#111111] p-3 border-2 border-black">
-                    <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" disabled class="w-full mb-2 opacity-90 cursor-not-allowed">
+                    <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" disabled class="w-full mb-2 opacity-95 cursor-not-allowed">
                     <div class="flex justify-between text-[9px] text-gray-300 items-center">
                         <span class="text-red-500 font-bold flex items-center gap-1">
                             <span class="live-dot">●</span> ÉLŐ
@@ -202,8 +195,8 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // Összes dal egyetlen listában (magyar és angol vegyesen)
-        const tracks = [
+        // Többségében magyar zenék, kevesebb angollal
+        const hungarianTracks = [
             { name: '🇭🇺 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc' },
             { name: '🇭🇺 Tankcsapda - Mennyország tourist', id: '270yvW1_l-E' },
             { name: '🇭🇺 Halott Pénz - Valami van a levegőben', id: '9kZ_q71p_J4' },
@@ -212,25 +205,26 @@
             { name: '🇭🇺 Majka & Curtis - Belehalok', id: '4H1W7k8gQ1o' },
             { name: '🇭🇺 Kowalsky meg a Vega - Varázsvilág', id: '0N6w0J8m4rQ' },
             { name: '🇭🇺 Margaret Island - Eső', id: '3vK1x9Z9W8c' },
-            { name: '🇭🇺 Quimby - Most múlik pontosan', id: '9Q4x2w1_1kE' },
-            { name: '🇬🇧 Coldplay - Viva La Vida', id: 'dvgZkm7_0eM' },
+            { name: '🇭🇺 Quimby - Most múlik pontosan', id: '9Q4x2w1_1kE' }
+        ];
+
+        const englishTracks = [
             { name: '🇬🇧 Imagine Dragons - Believer', id: '7qu1nvxaA0I' },
             { name: '🇬🇧 Ed Sheeran - Shape of You', id: 'JGwWNGJdvx8' },
-            { name: '🇬🇧 Avicii - Wake Me Up', id: 'IcrbM1l_BoI' },
-            { name: '🇬🇧 Queen - Bohemian Rhapsody', id: 'fJ9rUzIMcZQ' },
-            { name: '🇬🇧 Daft Punk - Get Lucky', id: '5NV6Rdv1a3I' },
-            { name: '🇬🇧 The Weeknd - Blinding Lights', id: '4NRXx6U8ABQ' },
-            { name: '🇬🇧 OneRepublic - Counting Stars', id: 'hT_nvWreIhg' }
+            { name: '🇬🇧 Avicii - Wake Me Up', id: 'IcrbM1l_BoI' }
         ];
 
         let ytPlayer = null;
-        let currentTrackIndex = 0;
+        let currentTrack = null;
         let isPlaying = false;
         let isPaused = false;
         let isMuted = false;
         let currentSpeed = 1.0;
         let previousVolume = 80;
         let progressInterval = null;
+
+        // Számláló: 3 magyar után jön 1 angol
+        let hungarianCounter = 0;
 
         const playlistTitle = document.getElementById('playlist-title');
         const statusText = document.getElementById('status-text');
@@ -249,7 +243,7 @@
                 ytPlayer = new YT.Player('yt-player', {
                     height: '200',
                     width: '200',
-                    videoId: tracks[0].id,
+                    videoId: hungarianTracks[0].id,
                     playerVars: { 'autoplay': 0, 'controls': 0 },
                     events: {
                         'onStateChange': onPlayerStateChange,
@@ -276,6 +270,20 @@
             } catch (e) {}
         }
 
+        function getWeightedTrack() {
+            if (hungarianCounter < 3) {
+                // Magyar szám sorsolása
+                hungarianCounter++;
+                const index = Math.floor(Math.random() * hungarianTracks.length);
+                return hungarianTracks[index];
+            } else {
+                // Angol szám sorsolása, majd számláló reset
+                hungarianCounter = 0;
+                const index = Math.floor(Math.random() * englishTracks.length);
+                return englishTracks[index];
+            }
+        }
+
         function startPlayback() {
             if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') {
                 statusText.innerHTML = `<span class="text-yellow-400">Töltődik a YouTube...</span>`;
@@ -286,11 +294,9 @@
                 ytPlayer.playVideo();
                 isPaused = false;
             } else {
-                // Teljesen véletlenszerű (random) sorsolás az összes szám közül
-                currentTrackIndex = Math.floor(Math.random() * tracks.length);
-                const track = tracks[currentTrackIndex];
-                playlistTitle.textContent = track.name;
-                ytPlayer.loadVideoById(track.id);
+                currentTrack = getWeightedTrack();
+                playlistTitle.textContent = currentTrack.name;
+                ytPlayer.loadVideoById(currentTrack.id);
                 ytPlayer.setPlaybackRate(currentSpeed);
                 ytPlayer.setVolume(volumeSlider.value);
                 ytPlayer.playVideo();
