@@ -357,22 +357,28 @@
 
             if (track.type === 'yt') {
                 audioPlayer.pause();
-                if (ytPlayer && ytPlayer.loadVideoById) {
-                    ytPlayer.loadVideoById(track.id);
-                    ytPlayer.setPlaybackRate(currentSpeed);
-                    ytPlayer.setVolume(volumeSlider.value);
-                    ytPlayer.playVideo();
+                if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+                    try {
+                        ytPlayer.loadVideoById(track.id);
+                        ytPlayer.setPlaybackRate(currentSpeed);
+                        ytPlayer.setVolume(volumeSlider.value);
+                        ytPlayer.playVideo();
+                    } catch (e) {
+                        console.log("Automatikus lejátszás blokkolva a böngésző által.");
+                    }
                 }
             } else {
-                if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
+                if (ytPlayer && typeof ytPlayer.stopVideo === 'function') ytPlayer.stopVideo();
                 audioPlayer.src = track.url;
                 audioPlayer.playbackRate = currentSpeed;
                 audioPlayer.volume = volumeSlider.value / 100;
+                
                 audioPlayer.play().then(() => {
                     isPlaying = true;
                     updateUIState(true);
-                }).catch(() => {
-                    playNextTrack();
+                }).catch(error => {
+                    console.log("Interakció szükséges a lejátszáshoz:", error);
+                    statusText.innerHTML = `<span class="text-orange-400">Kattints a Lejátszásra!</span>`;
                 });
             }
             startProgressUpdate();
