@@ -110,6 +110,15 @@
             opacity: 0;
             pointer-events: none;
         }
+
+        @keyframes livePulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        .live-dot {
+            animation: livePulse 1.5s infinite;
+        }
     </style>
 </head>
 <body class="flex items-center justify-center p-4">
@@ -131,9 +140,13 @@
 
         <div class="p-6">
             <div class="mc-inner-box p-5 mb-5 text-center">
-                <div class="text-[10px] text-gray-400 uppercase mb-3">JUKEBOX LEJÁTSZÓ</div>
-                <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate">
+                <div class="text-[10px] text-gray-400 uppercase mb-2">JUKEBOX LEJÁTSZÓ</div>
+                <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3">
                     Készenlétben
+                </div>
+                <!-- Visszatett ÉLŐ RÁDIÓ kijelzés -->
+                <div class="text-[10px] text-red-500 font-bold flex items-center justify-center gap-1 bg-[#111111] py-1 border-2 border-black">
+                    <span class="live-dot">●</span> ÉLŐ RÁDIÓ
                 </div>
             </div>
 
