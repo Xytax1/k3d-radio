@@ -65,6 +65,23 @@
         }
         .btn-mc-stop:hover { filter: brightness(1.2); }
 
+        .speed-btn {
+            background-color: #111111;
+            border: 2px solid #000;
+            color: #aaa;
+            font-size: 9px;
+            padding: 8px 10px;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+        }
+        .speed-btn.active {
+            background-color: #55ff55;
+            color: #000;
+            border-color: #ffffff;
+            font-weight: bold;
+        }
+
         input[type=range] {
             -webkit-appearance: none;
             background: #111111;
@@ -126,6 +143,16 @@
                 </div>
             </div>
 
+            <div class="mb-5 text-left">
+                <span class="block text-[10px] text-yellow-300 mb-2 [text-shadow:_1px_1px_0_#000]">SEBESSÉG:</span>
+                <div class="flex gap-2">
+                    <button class="speed-btn" onclick="setPlaybackSpeed(0.5, this)">0.5x</button>
+                    <button class="speed-btn active" onclick="setPlaybackSpeed(1.0, this)">1.0x</button>
+                    <button class="speed-btn" onclick="setPlaybackSpeed(1.5, this)">1.5x</button>
+                    <button class="speed-btn" onclick="setPlaybackSpeed(2.0, this)">2.0x</button>
+                </div>
+            </div>
+
             <div class="mb-5">
                 <button id="main-toggle-btn" class="btn-mc-play w-full py-4 px-5 cursor-pointer flex items-center justify-center gap-3 text-sm">
                     <i id="btn-icon" class="fa-solid fa-play"></i>
@@ -145,6 +172,7 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
+        // Pontosan 100 darab dal: 50 magyar és 50 külföldi sláger
         const tracks = [
             // --- 50 MAGYAR SLÁGER ---
             { name: 'Wellhello - Apuveddmeg', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
@@ -262,6 +290,7 @@
         let isPlaying = false;
         let isPaused = false;
         let isMuted = false;
+        let currentSpeed = 1.0;
         let previousVolume = 80;
 
         const playlistTitle = document.getElementById('playlist-title');
@@ -279,19 +308,13 @@
                     height: '200',
                     width: '200',
                     videoId: firstId,
-                    playerVars: { 'autoplay': 1, 'controls': 0, 'enablejsapi': 1 },
+                    playerVars: { 'autoplay': 0, 'controls': 0, 'enablejsapi': 1 },
                     events: { 
-                        'onReady': onPlayerReady,
                         'onStateChange': onPlayerStateChange, 
                         'onError': onPlayerError 
                     }
                 });
             } catch (e) {}
-        }
-
-        function onPlayerReady(event) {
-            // Automatikusan elindítja a lejátszást az oldal betöltődésekor
-            startPlayback();
         }
 
         function playClickSound() {
@@ -328,6 +351,7 @@
 
                 playlistTitle.textContent = currentTrack.name;
                 ytPlayer.loadVideoById(videoId);
+                ytPlayer.setPlaybackRate(currentSpeed);
                 ytPlayer.setVolume(volumeSlider.value);
                 ytPlayer.playVideo();
             }
@@ -370,6 +394,14 @@
                 btnIcon.className = 'fa-solid fa-play';
                 btnText.textContent = 'LEJÁTSZÁS';
             }
+        }
+
+        function setPlaybackSpeed(speed, btnElement) {
+            playClickSound();
+            currentSpeed = speed;
+            if (ytPlayer && ytPlayer.setPlaybackRate) ytPlayer.setPlaybackRate(speed);
+            document.querySelectorAll('.speed-btn').forEach(btn => btn.classList.remove('active'));
+            if (btnElement) btnElement.classList.add('active');
         }
 
         mainToggleBtn.addEventListener('click', togglePlayback);
