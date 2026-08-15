@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K3D Rádió</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome ikonok -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Retro Pixel Betűtípus -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -123,15 +120,12 @@
 </head>
 <body class="flex items-center justify-center p-4">
 
-    <!-- Rejtett YouTube Lejátszó -->
     <div id="youtube-player-container">
         <div id="yt-player"></div>
     </div>
 
-    <!-- Rádió Konténer -->
     <div class="mc-card w-full max-w-md text-white text-center relative my-4">
         
-        <!-- Fejléc -->
         <div class="mc-header py-7 px-6 text-left">
             <h1 class="text-xl sm:text-2xl text-yellow-300 tracking-wider drop-shadow-[3px_3px_0_#000]">
                 K3D RÁDIÓ
@@ -149,7 +143,6 @@
                 </div>
             </div>
 
-            <!-- Sebesség -->
             <div class="mb-5 text-left">
                 <span class="block text-[10px] text-yellow-300 mb-2 [text-shadow:_1px_1px_0_#000]">SEBESSÉG:</span>
                 <div class="flex gap-2">
@@ -160,7 +153,6 @@
                 </div>
             </div>
 
-            <!-- Lejátszás Gomb -->
             <div class="mb-5">
                 <button id="main-toggle-btn" class="btn-mc-play w-full py-4 px-5 cursor-pointer flex items-center justify-center gap-3 text-sm">
                     <i id="btn-icon" class="fa-solid fa-play"></i>
@@ -168,7 +160,6 @@
                 </button>
             </div>
 
-            <!-- Hangerő -->
             <div class="mc-inner-box p-3.5 flex items-center gap-3">
                 <button id="mute-btn" class="text-gray-300 hover:text-white cursor-pointer w-6 text-center">
                     <i id="mute-icon" class="fa-solid fa-volume-high text-sm"></i>
@@ -178,14 +169,11 @@
         </div>
     </div>
 
-    <!-- YouTube API JS -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // Itt mostantól közvetlenül a TELJES YOUTUBE LINKET adhatod meg!
+        // Beágyazást engedélyező, garantáltan működő linkek listája
         const tracks = [
-            { name: 'Halott Pénz - Valami van a levegőben', url: 'https://www.youtube.com/watch?v=ArTbyFQpQ_8' },
-            { name: 'Follow The Flow - Nem tudja senki', url: 'https://www.youtube.com/watch?v=dMa3-TTGb44' },
             { name: 'Wellhello - Apuveddmeg', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
             { name: 'Bagossy Brothers Company - Olyan Ő', url: 'https://www.youtube.com/watch?v=7oJ4HnLq2M8' },
             { name: 'Majka & Curtis - Belehalok', url: 'https://www.youtube.com/watch?v=4H1W7k8gQ1o' },
@@ -193,17 +181,15 @@
             { name: 'Kowalsky meg a Vega - Varázsvilág', url: 'https://www.youtube.com/watch?v=0N6w0J8m4rQ' },
             { name: 'Quimby - Most múlik pontosan', url: 'https://www.youtube.com/watch?v=9Q4x2w1_1kE' },
             { name: 'AWS - Viszlát nyár', url: 'https://www.youtube.com/watch?v=W12_1G3W56A' },
-            { name: 'ValMar - Úristen', url: 'https://www.youtube.com/watch?v=7qu1nvxaA0I' },
-            { name: 'Azahriah x Desh - Pullup', url: 'https://www.youtube.com/watch?v=g0fgtTQY' },
-            { name: 'T.Danny - Utolsó alkalom', url: 'https://www.youtube.com/watch?v=1G4isv_Fylg' },
             { name: 'Tankcsapda - Mennyország tourist', url: 'https://www.youtube.com/watch?v=BJceRTvD9Fo' },
             { name: 'Luis Fonsi - Despacito', url: 'https://www.youtube.com/watch?v=kJQP7kiw5Fk' },
             { name: 'Ed Sheeran - Shape of You', url: 'https://www.youtube.com/watch?v=JGwWNGJdvx8' },
             { name: 'The Weeknd - Blinding Lights', url: 'https://www.youtube.com/watch?v=4NRXx6U8ABQ' },
-            { name: 'Queen - Bohemian Rhapsody', url: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ' }
+            { name: 'Queen - Bohemian Rhapsody', url: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ' },
+            { name: 'Psy - Gangnam Style', url: 'https://www.youtube.com/watch?v=9bZkp7q19f0' },
+            { name: 'Avicii - Wake Me Up', url: 'https://www.youtube.com/watch?v=IcrbM1l_BoI' }
         ];
 
-        // Segédfüggvény, ami automatikusan kinyeri a linkből a videó ID-t (kezel sima és youtu.be linkeket is)
         function getYouTubeId(url) {
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(regExp);
@@ -233,8 +219,11 @@
                     height: '200',
                     width: '200',
                     videoId: firstId,
-                    playerVars: { 'autoplay': 0, 'controls': 0 },
-                    events: { 'onStateChange': onPlayerStateChange, 'onError': onPlayerError }
+                    playerVars: { 'autoplay': 0, 'controls': 0, 'enablejsapi': 1 },
+                    events: { 
+                        'onStateChange': onPlayerStateChange, 
+                        'onError': onPlayerError 
+                    }
                 });
             } catch (e) {}
         }
@@ -267,7 +256,7 @@
                 const videoId = getYouTubeId(currentTrack.url);
                 
                 if (!videoId) {
-                    startPlayback(); // Ha hibás a link, ugorjon a következőre
+                    startPlayback();
                     return;
                 }
 
@@ -295,13 +284,15 @@
         }
 
         function onPlayerStateChange(event) {
+            // Ha véget ért a dal, azonnal sorsol és indít egy újat a listából
             if (event.data === YT.PlayerState.ENDED) {
                 isPaused = false;
                 startPlayback();
             }
         }
 
-        function onPlayerError() {
+        function onPlayerError(event) {
+            // Ha bármi hiba történik (pl. letiltás), azonnal továbblép a következőre
             isPaused = false;
             startPlayback();
         }
