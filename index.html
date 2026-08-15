@@ -21,14 +21,13 @@
         }
 
         body {
-            /* Új háttérkép homályosító és sötétítő réteggel */
+            /* Új, stabil háttérkép link sötétítővel és homályosítással */
             background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-                        url('https://i.imgur.com/81Q64L0.jpg') no-repeat center center fixed;
+                        url('https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
         }
 
-        /* Homályosító konténer a háttérre vagy fix elem */
         body::before {
             content: "";
             position: fixed;
