@@ -272,11 +272,11 @@
         function updateListeners() {
             const el = document.getElementById('listener-count');
             let current = parseInt(el.textContent);
-            const change = Math.floor(Math.random() * 5) - 2; // -2 és +2 között változik
+            const change = Math.floor(Math.random() * 5) - 2;
             current = Math.max(1, Math.min(50, current + change));
             el.textContent = current;
         }
-        setInterval(updateListeners, 4000); // 4 másodpercenként frissül
+        setInterval(updateListeners, 4000);
 
         let ytPlayer = null;
         let audioPlayer = new Audio();
