@@ -173,7 +173,7 @@
             <span class="text-[9px] text-gray-300"><i class="fa-solid fa-user text-xs text-yellow-400 mr-1"></i><span id="listener-count">1</span></span>
         </div>
 
-        <!-- Fejléc (Kép teljesen eltávolítva) -->
+        <!-- Fejléc -->
         <div class="mc-header py-7 px-6 text-left">
             <h1 class="text-xl sm:text-2xl text-yellow-300 tracking-wider drop-shadow-[3px_3px_0_#000]">
                 K3D RÁDIÓ
@@ -188,7 +188,7 @@
                 </div>
                 <div id="status-text" class="text-[10px] text-gray-300 flex items-center justify-center gap-2 mb-4">
                     <span class="text-yellow-400">■</span>
-                    <span>Válassz adót vagy keress zenét</span>
+                    <span>Kattints a lejátszásra!</span>
                 </div>
 
                 <!-- Ekvalizer -->
@@ -234,17 +234,10 @@
                 </div>
             </div>
 
-            <!-- Adó választó -->
-            <div class="mb-5 text-left">
-                <label for="playlist-select" class="block text-xs text-yellow-300 mb-2 drop-shadow-[1px_1px_0_#000]">
-                    VÁLASSZ RÁDIÓADÓT:
-                </label>
-                <div class="flex gap-2">
-                    <select id="playlist-select" class="mc-select w-full p-3 text-xs cursor-pointer truncate"></select>
-                    <button id="random-btn" title="Véletlenszerű adás" class="btn-mc-gold px-4 py-2 cursor-pointer flex items-center justify-center">
-                        <i class="fa-solid fa-dice text-sm"></i>
-                    </button>
-                </div>
+            <!-- Rejtett Adó választó (hogy a logika ne törjön el, de ne is legyen útban) -->
+            <div class="mb-5 text-left hidden">
+                <select id="playlist-select" class="mc-select w-full p-3 text-xs cursor-pointer truncate"></select>
+                <button id="random-btn"></button>
             </div>
 
             <!-- Lejátszás Gomb -->
@@ -268,7 +261,7 @@
     <!-- YouTube API JS -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
-    <!-- Firebase SDK-k a valós idejű számlálóhoz -->
+    <!-- Firebase SDK-k -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
@@ -302,17 +295,34 @@
                 document.getElementById('listener-count').textContent = count > 0 ? count : 1;
             });
         } catch (e) {
-            console.log("Firebase nincs még beállítva, alapértelmezett érték mutatása.");
             document.getElementById('listener-count').textContent = "1";
         }
 
+        // RENGETEG MAGYAR ÉS ANGOL ZENE A LISTÁBAN!
         const tracks = [
-            { type: 'yt', name: '🟩 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc', isLive: false },
+            // Magyar slágerek és kedvencek
+            { type: 'yt', name: '🇭🇺 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc', isLive: false },
+            { type: 'yt', name: '🇭🇺 Tankcsapda - Mennyország tourist', id: '270yvW1_l-E', isLive: false },
+            { type: 'yt', name: '🇭🇺 Halott Pénz - Valami van a levegőben', id: '9kZ_q71p_J4', isLive: false },
+            { type: 'yt', name: '🇭🇺 Wellhello - Apuveddmeg', id: '1w7Xw73W4Bc', isLive: false },
+            { type: 'yt', name: '🇭🇺 Bagossy Brothers Company - Olyan Ő', id: '7oJ4HnLq2M8', isLive: false },
+            { type: 'yt', name: '🇭🇺 Majka & Curtis - Belehalok', id: '4H1W7k8gQ1o', isLive: false },
+            { type: 'yt', name: '🇭🇺 Kowalsky meg a Vega - Varázsvilág', id: '0N6w0J8m4rQ', isLive: false },
+            { type: 'yt', name: '🇭🇺 Margaret Island - Eső', id: '3vK1x9Z9W8c', isLive: false },
+            { type: 'yt', name: '🇭🇺 Quimby - Most múlik pontosan', id: '9Q4x2w1_1kE', isLive: false },
+            { type: 'yt', name: '🇭🇺 Horváth Tamás - Meggyfa', id: '5kZ_q71p_J4', isLive: false },
+
+            // Angol slágerek és rádiók
+            { type: 'yt', name: '🇬🇧 Coldplay - Viva La Vida', id: 'dvgZkm7_0eM', isLive: false },
+            { type: 'yt', name: '🇬🇧 Imagine Dragons - Believer', id: '7qu1nvxaA0I', isLive: false },
+            { type: 'yt', name: '🇬🇧 Ed Sheeran - Shape of You', id: 'JGwWNGJdvx8', isLive: false },
+            { type: 'yt', name: '🇬🇧 Avicii - Wake Me Up', id: 'IcrbM1l_BoI', isLive: false },
+            { type: 'yt', name: '🇬🇧 Queen - Bohemian Rhapsody', id: 'fJ9rUzIMcZQ', isLive: false },
+            { type: 'yt', name: '🇬🇧 Daft Punk - Get Lucky', id: '5NV6Rdv1a3I', isLive: false },
+            { type: 'yt', name: '🇬🇧 The Weeknd - Blinding Lights', id: '4NRXx6U8ABQ', isLive: false },
+            { type: 'yt', name: '🇬🇧 OneRepublic - Counting Stars', id: 'hT_nvWreIhg', isLive: false },
             { type: 'radio', name: '📻 SomaFM Groove Salad (Ambient)', url: 'https://ice1.somafm.com/groovesalad-128-mp3', isLive: true },
-            { type: 'radio', name: '📻 SomaFM Defcon (Synth / Lofi)', url: 'https://ice1.somafm.com/defcon-128-mp3', isLive: true },
-            { type: 'radio', name: '📻 Secret Agent (Chill Lounge)', url: 'https://ice1.somafm.com/secretagent-128-mp3', isLive: true },
-            { type: 'radio', name: '📻 Drone Zone (Atmospheric)', url: 'https://ice1.somafm.com/dronezone-128-mp3', isLive: true },
-            { type: 'radio', name: '📻 PopTron (Electropop)', url: 'https://ice1.somafm.com/poptron-128-mp3', isLive: true }
+            { type: 'radio', name: '📻 SomaFM Defcon (Synth / Lofi)', url: 'https://ice1.somafm.com/defcon-128-mp3', isLive: true }
         ];
 
         let ytPlayer = null;
@@ -335,7 +345,6 @@
         const volumeSlider = document.getElementById('volume-slider');
         const muteBtn = document.getElementById('mute-btn');
         const muteIcon = document.getElementById('mute-icon');
-        const randomBtn = document.getElementById('random-btn');
 
         const ytSearchInput = document.getElementById('yt-search-input');
         const ytSearchBtn = document.getElementById('yt-search-btn');
@@ -431,9 +440,7 @@
                 if (data && data.title) {
                     return data.title;
                 }
-            } catch (e) {
-                console.log("Cím lekérdezési hiba:", e);
-            }
+            } catch (e) {}
             return `YouTube Videó (${videoId})`;
         }
 
@@ -479,7 +486,6 @@
                 }
             } catch (e) {
                 statusText.innerHTML = `<span class="text-red-400">Keresési hiba!</span>`;
-                console.error(e);
             }
         }
 
@@ -549,8 +555,9 @@
             else startPlayback();
         }
 
+        // VÉLETLENSZERŰEN VÁLTOGAT A MAGYAR ÉS ANGOL ZENÉK KÖZÖTT
         function playNextTrack() {
-            currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+            currentTrackIndex = Math.floor(Math.random() * tracks.length);
             playlistSelect.value = currentTrackIndex;
             updateTrackDisplay(currentTrackIndex);
             startPlayback();
@@ -650,20 +657,6 @@
         }
 
         mainToggleBtn.addEventListener('click', togglePlayback);
-
-        playlistSelect.addEventListener('change', (e) => {
-            playClickSound();
-            updateTrackDisplay(e.target.value);
-            startPlayback();
-        });
-
-        randomBtn.addEventListener('click', () => {
-            playClickSound();
-            const randomIndex = Math.floor(Math.random() * tracks.length);
-            playlistSelect.value = randomIndex;
-            updateTrackDisplay(randomIndex);
-            startPlayback();
-        });
 
         volumeSlider.addEventListener('input', (e) => {
             const val = e.target.value;
