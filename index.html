@@ -21,7 +21,10 @@
         }
 
         body {
-            background-color: #0b0e14;
+            /* Minecraft tájkép háttér sötétítő réteggel és középre igazítással */
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1627856013091-fed6e4e30b8c?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
         }
 
@@ -173,7 +176,7 @@
             <span class="text-[9px] text-gray-300"><i class="fa-solid fa-user text-xs text-yellow-400 mr-1"></i><span id="listener-count">1</span></span>
         </div>
 
-        <!-- Fejléc (Kép teljesen eltávolítva) -->
+        <!-- Fejléc -->
         <div class="mc-header py-7 px-6 text-left">
             <h1 class="text-xl sm:text-2xl text-yellow-300 tracking-wider drop-shadow-[3px_3px_0_#000]">
                 K3D RÁDIÓ
