@@ -154,8 +154,8 @@
         <div id="yt-player"></div>
     </div>
 
-    <!-- Rádió Konténer -->
-    <div class="mc-card w-full max-w-md text-white text-center relative my-4">
+    <!-- Rádió Konténer (Szélesebb kialakítás) -->
+    <div class="mc-card w-full max-w-4xl text-white relative my-4">
         
         <!-- Hallgatószám -->
         <div class="absolute top-3 right-3 bg-black/80 border-2 border-black px-2.5 py-1.5 flex items-center gap-2 z-10">
@@ -170,88 +170,108 @@
             </h1>
         </div>
 
-        <div class="p-6">
-            <div class="mc-inner-box p-5 mb-5 text-center">
-                <div class="text-[10px] text-gray-400 uppercase mb-3">JUKEBOX LEJÁTSZÓ</div>
-                <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3">
-                    Készenlétben
-                </div>
-                <div id="status-text" class="text-[10px] text-gray-300 flex items-center justify-center gap-2 mb-4">
-                    <span class="text-yellow-400">■</span>
-                    <span>Válassz adót vagy keress zenét</span>
+        <!-- Kétoszlopos Fő Tartalom -->
+        <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- BAL OSZLOP: Lejátszó, Státusz, Vezérlők -->
+            <div class="flex flex-col justify-between">
+                <div>
+                    <div class="mc-inner-box p-5 mb-5 text-center">
+                        <div class="text-[10px] text-gray-400 uppercase mb-3">JUKEBOX LEJÁTSZÓ</div>
+                        <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3">
+                            Készenlétben
+                        </div>
+                        <div id="status-text" class="text-[10px] text-gray-300 flex items-center justify-center gap-2 mb-4">
+                            <span class="text-yellow-400">■</span>
+                            <span>Válassz adót vagy keress zenét</span>
+                        </div>
+
+                        <!-- Ekvalizer -->
+                        <div id="equalizer" class="flex items-center justify-center gap-3 h-12 bg-[#111111] p-2 border-2 border-black">
+                            <div class="mc-eq-bar"></div>
+                            <div class="mc-eq-bar"></div>
+                            <div class="mc-eq-bar"></div>
+                            <div class="mc-eq-bar"></div>
+                            <div class="mc-eq-bar"></div>
+                        </div>
+
+                        <!-- Tekerő csúszka -->
+                        <div id="seek-container" class="hidden bg-[#111111] p-3 border-2 border-black">
+                            <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" class="w-full cursor-pointer mb-2">
+                            <div class="flex justify-between text-[9px] text-gray-300">
+                                <span id="current-time">00:00</span>
+                                <span id="duration-time">00:00</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Ekvalizer -->
-                <div id="equalizer" class="flex items-center justify-center gap-3 h-12 bg-[#111111] p-2 border-2 border-black">
-                    <div class="mc-eq-bar"></div>
-                    <div class="mc-eq-bar"></div>
-                    <div class="mc-eq-bar"></div>
-                    <div class="mc-eq-bar"></div>
-                    <div class="mc-eq-bar"></div>
-                </div>
+                <div>
+                    <!-- Lejátszás Gomb -->
+                    <div class="mb-5">
+                        <button id="main-toggle-btn" class="btn-mc-play w-full py-4 px-5 cursor-pointer flex items-center justify-center gap-3 text-sm">
+                            <i id="btn-icon" class="fa-solid fa-play"></i>
+                            <span id="btn-text">LEJÁTSZÁS</span>
+                        </button>
+                    </div>
 
-                <!-- Tekerő csúszka -->
-                <div id="seek-container" class="hidden bg-[#111111] p-3 border-2 border-black">
-                    <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" class="w-full cursor-pointer mb-2">
-                    <div class="flex justify-between text-[9px] text-gray-300">
-                        <span id="current-time">00:00</span>
-                        <span id="duration-time">00:00</span>
+                    <!-- Hangerő -->
+                    <div class="mc-inner-box p-3.5 flex items-center gap-3">
+                        <button id="mute-btn" class="text-gray-300 hover:text-white cursor-pointer w-6 text-center">
+                            <i id="mute-icon" class="fa-solid fa-volume-high text-sm"></i>
+                        </button>
+                        <input type="range" id="volume-slider" min="0" max="100" step="1" value="80" class="w-full cursor-pointer">
                     </div>
                 </div>
             </div>
 
-            <!-- YouTube Kereső Sáv -->
-            <div class="mb-5 text-left">
-                <label for="yt-search-input" class="block text-xs text-yellow-300 mb-2 drop-shadow-[1px_1px_0_#000]">
-                    YOUTUBE KERESÉS / LINK:
-                </label>
-                <div class="flex gap-2">
-                    <input type="text" id="yt-search-input" placeholder="Dal neve vagy YT link..." class="mc-select w-full p-3 text-xs px-3">
-                    <button id="yt-search-btn" title="Keresés" class="btn-mc-play px-4 py-2 cursor-pointer flex items-center justify-center">
-                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
-                    </button>
+            <!-- JOBB OSZLOP: Kereső, Sebesség, Adóválasztó -->
+            <div class="flex flex-col justify-between">
+                <div>
+                    <!-- YouTube Kereső Sáv -->
+                    <div class="mb-5 text-left">
+                        <label for="yt-search-input" class="block text-xs text-yellow-300 mb-2 drop-shadow-[1px_1px_0_#000]">
+                            YOUTUBE KERESÉS / LINK:
+                        </label>
+                        <div class="flex gap-2">
+                            <input type="text" id="yt-search-input" placeholder="Dal neve vagy YT link..." class="mc-select w-full p-3 text-xs px-3">
+                            <button id="yt-search-btn" title="Keresés" class="btn-mc-play px-4 py-2 cursor-pointer flex items-center justify-center">
+                                <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sebesség -->
+                    <div class="mb-5 text-left">
+                        <span class="block text-[10px] text-yellow-300 mb-2 drop-shadow-[1px_1px_0_#000]">SEBESSÉG:</span>
+                        <div class="flex gap-2">
+                            <button class="speed-btn" onclick="setPlaybackSpeed(0.5, this)">0.5x</button>
+                            <button class="speed-btn active" onclick="setPlaybackSpeed(1.0, this)">1.0x</button>
+                            <button class="speed-btn" onclick="setPlaybackSpeed(1.5, this)">1.5x</button>
+                            <button class="speed-btn" onclick="setPlaybackSpeed(2.0, this)">2.0x</button>
+                        </div>
+                    </div>
+
+                    <!-- Adó választó -->
+                    <div class="mb-5 text-left">
+                        <label for="playlist-select" class="block text-xs text-yellow-300 mb-2 drop-shadow-[1px_1px_0_#000]">
+                            VÁLASSZ RÁDIÓADÓT:
+                        </label>
+                        <div class="flex gap-2">
+                            <select id="playlist-select" class="mc-select w-full p-3 text-xs cursor-pointer truncate"></select>
+                            <button id="random-btn" title="Véletlenszerű adás" class="btn-mc-gold px-4 py-2 cursor-pointer flex items-center justify-center">
+                                <i class="fa-solid fa-dice text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kis dekoratív elem vagy üresen hagyás az egyensúlyért -->
+                <div class="text-[9px] text-gray-400 text-center lg:text-right pt-4">
+                    K3D SYSTEM v2.0 - Jukebox Edition
                 </div>
             </div>
 
-            <!-- Sebesség -->
-            <div class="mb-5 text-left">
-                <span class="block text-[10px] text-yellow-300 mb-2 drop-shadow-[1px_1px_0_#000]">SEBESSÉG:</span>
-                <div class="flex gap-2">
-                    <button class="speed-btn" onclick="setPlaybackSpeed(0.5, this)">0.5x</button>
-                    <button class="speed-btn active" onclick="setPlaybackSpeed(1.0, this)">1.0x</button>
-                    <button class="speed-btn" onclick="setPlaybackSpeed(1.5, this)">1.5x</button>
-                    <button class="speed-btn" onclick="setPlaybackSpeed(2.0, this)">2.0x</button>
-                </div>
-            </div>
-
-            <!-- Adó választó -->
-            <div class="mb-5 text-left">
-                <label for="playlist-select" class="block text-xs text-yellow-300 mb-2 drop-shadow-[1px_1px_0_#000]">
-                    VÁLASSZ RÁDIÓADÓT:
-                </label>
-                <div class="flex gap-2">
-                    <select id="playlist-select" class="mc-select w-full p-3 text-xs cursor-pointer truncate"></select>
-                    <button id="random-btn" title="Véletlenszerű adás" class="btn-mc-gold px-4 py-2 cursor-pointer flex items-center justify-center">
-                        <i class="fa-solid fa-dice text-sm"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Lejátszás Gomb -->
-            <div class="mb-5">
-                <button id="main-toggle-btn" class="btn-mc-play w-full py-4 px-5 cursor-pointer flex items-center justify-center gap-3 text-sm">
-                    <i id="btn-icon" class="fa-solid fa-play"></i>
-                    <span id="btn-text">LEJÁTSZÁS</span>
-                </button>
-            </div>
-
-            <!-- Hangerő -->
-            <div class="mc-inner-box p-3.5 flex items-center gap-3">
-                <button id="mute-btn" class="text-gray-300 hover:text-white cursor-pointer w-6 text-center">
-                    <i id="mute-icon" class="fa-solid fa-volume-high text-sm"></i>
-                </button>
-                <input type="range" id="volume-slider" min="0" max="100" step="1" value="80" class="w-full cursor-pointer">
-            </div>
         </div>
     </div>
 
@@ -384,7 +404,6 @@
             const query = ytSearchInput.value.trim();
             if (!query) return;
 
-            // 1. YouTube URL vagy ID ellenőrzés
             const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
             const match = query.match(ytRegex);
 
@@ -400,7 +419,6 @@
                 return;
             }
 
-            // 2. Keresőszó alapú lekérdezés nyilvános API-n keresztül
             statusText.innerHTML = `<span class="text-cyan-400">Keresés...</span>`;
             try {
                 const response = await fetch(`https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(query)}&filter=videos`);
