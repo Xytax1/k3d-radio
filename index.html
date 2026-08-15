@@ -102,7 +102,6 @@
             outline: none;
         }
 
-        /* Ekvalizer animation */
         .mc-eq-bar {
             width: 14px;
             height: 14px;
@@ -122,7 +121,6 @@
             100% { background-color: #ff5555; }
         }
 
-        /* Csúszka stílusok */
         input[type=range] {
             -webkit-appearance: none;
             background: #111111;
@@ -159,7 +157,7 @@
     <!-- Rádió Konténer -->
     <div class="mc-card w-full max-w-md text-white text-center relative my-4">
         
-        <!-- Hallgatószámláló a jobb felső sarokban -->
+        <!-- Hallgatószám -->
         <div class="absolute top-3 right-3 bg-black/80 border-2 border-black px-2.5 py-1.5 flex items-center gap-2 z-10">
             <span class="inline-block w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
             <span class="text-[9px] text-gray-300"><i class="fa-solid fa-user text-xs text-yellow-400 mr-1"></i><span id="listener-count">1</span></span>
@@ -174,7 +172,6 @@
         </div>
 
         <div class="p-6">
-            <!-- Jukebox Doboz -->
             <div class="mc-inner-box p-5 mb-5 text-center">
                 <div class="text-[10px] text-gray-400 uppercase mb-3">JUKEBOX LEJÁTSZÓ</div>
                 <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3">
@@ -185,7 +182,7 @@
                     <span>Készenlétben</span>
                 </div>
 
-                <!-- 1. EKVALIZER (Élő adásoknál ez látszik) -->
+                <!-- Ekvalizer -->
                 <div id="equalizer" class="flex items-center justify-center gap-3 h-12 bg-[#111111] p-2 border-2 border-black">
                     <div class="mc-eq-bar"></div>
                     <div class="mc-eq-bar"></div>
@@ -194,7 +191,7 @@
                     <div class="mc-eq-bar"></div>
                 </div>
 
-                <!-- 2. TEKERŐ CSÚSZKA (Csak fix hosszúságú videóknál jelenik meg) -->
+                <!-- Tekerő csúszka -->
                 <div id="seek-container" class="hidden bg-[#111111] p-3 border-2 border-black">
                     <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" class="w-full cursor-pointer mb-2">
                     <div class="flex justify-between text-[9px] text-gray-300">
@@ -204,7 +201,7 @@
                 </div>
             </div>
 
-            <!-- SEBESSÉG BEÁLLÍTÁS -->
+            <!-- Sebesség -->
             <div class="mb-5 text-left">
                 <span class="block text-[10px] text-yellow-300 mb-2 drop-shadow-[1px_1px_0_#000]">SEBESSÉG:</span>
                 <div class="flex gap-2">
@@ -215,15 +212,13 @@
                 </div>
             </div>
 
-            <!-- Válassz adást + Random gomb -->
+            <!-- Adó választó -->
             <div class="mb-5 text-left">
                 <label for="playlist-select" class="block text-xs text-yellow-300 mb-2 drop-shadow-[1px_1px_0_#000]">
                     VÁLASSZ RÁDIÓADÓT:
                 </label>
                 <div class="flex gap-2">
-                    <select id="playlist-select" class="mc-select w-full p-3 text-xs cursor-pointer truncate">
-                        <!-- Opciók JS-ből -->
-                    </select>
+                    <select id="playlist-select" class="mc-select w-full p-3 text-xs cursor-pointer truncate"></select>
                     <button id="random-btn" title="Véletlenszerű adás" class="btn-mc-gold px-4 py-2 cursor-pointer flex items-center justify-center">
                         <i class="fa-solid fa-dice text-sm"></i>
                     </button>
@@ -238,7 +233,7 @@
                 </button>
             </div>
 
-            <!-- Hangerő + Némítás gomb -->
+            <!-- Hangerő -->
             <div class="mc-inner-box p-3.5 flex items-center gap-3">
                 <button id="mute-btn" class="text-gray-300 hover:text-white cursor-pointer w-6 text-center">
                     <i id="mute-icon" class="fa-solid fa-volume-high text-sm"></i>
@@ -246,7 +241,6 @@
                 <input type="range" id="volume-slider" min="0" max="100" step="1" value="80" class="w-full cursor-pointer">
             </div>
         </div>
-
     </div>
 
     <!-- YouTube API JS -->
@@ -314,27 +308,10 @@
                 playlistSelect.appendChild(opt);
             });
             updateTrackDisplay(0);
-            updateListenerCount();
-        }
-
-        /* Valódi hallgatószám (ahányan megnyitották a lapot) */
-        function updateListenerCount() {
-            // Egyedi név a rádiódnak a CountAPI-n
-            const namespace = 'k3d-radio-listeners-xytax1';
-            const key = 'active_visits';
-
-            // Először adunk egyet a számlálóhoz (mert megnyitották), majd lekérjük
-            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data && data.value) {
-                        listenerCountEl.textContent = data.value;
-                    }
-                })
-                .catch(() => {
-                    // Ha esetleg nem érné el a szervert, 1-ről indul
-                    listenerCountEl.textContent = "1";
-                });
+            
+            // Biztonságos hallgatószám (1-től indul, nem fagy le)
+            let baseCount = 1;
+            listenerCountEl.textContent = baseCount;
         }
 
         function updateTrackDisplay(index) {
