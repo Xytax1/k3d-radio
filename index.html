@@ -249,7 +249,6 @@
     <script>
         const tracks = [
             { type: 'yt', name: '🟩 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc', isLive: false },
-            { type: 'yt', name: '🎧 Lofi Girl - Beats to Relax/Study', id: 'jfKfPfyJRdk', isLive: true },
             { type: 'radio', name: '📻 SomaFM Groove Salad (Ambient)', url: 'https://ice1.somafm.com/groovesalad-128-mp3', isLive: true },
             { type: 'radio', name: '📻 SomaFM Defcon (Synth / Lofi)', url: 'https://ice1.somafm.com/defcon-128-mp3', isLive: true },
             { type: 'radio', name: '📻 Secret Agent (Chill Lounge)', url: 'https://ice1.somafm.com/secretagent-128-mp3', isLive: true },
@@ -308,10 +307,7 @@
                 playlistSelect.appendChild(opt);
             });
             updateTrackDisplay(0);
-            
-            // Biztonságos hallgatószám (1-től indul, nem fagy le)
-            let baseCount = 1;
-            listenerCountEl.textContent = baseCount;
+            listenerCountEl.textContent = 1;
         }
 
         function updateTrackDisplay(index) {
