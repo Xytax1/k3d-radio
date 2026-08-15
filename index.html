@@ -265,13 +265,13 @@
 
         function updateUIState(playing) {
             if (playing) {
-                mainToggleBtn.classList.replace('btn-mc-play', 'btn-mc-stop');
-                btnIcon.className = 'fa-solid fa-square';
-                btnText.textContent = 'LEÁLLÍTÁS';
-            } else {
                 mainToggleBtn.classList.replace('btn-mc-stop', 'btn-mc-play');
                 btnIcon.className = 'fa-solid fa-play';
                 btnText.textContent = 'LEJÁTSZÁS';
+            } else {
+                mainToggleBtn.classList.replace('btn-mc-play', 'btn-mc-stop');
+                btnIcon.className = 'fa-solid fa-square';
+                btnText.textContent = 'LEÁLLÍTÁS';
             }
         }
 
