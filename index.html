@@ -140,19 +140,19 @@
 
         <div class="p-6">
             <div class="mc-inner-box p-5 mb-5 text-center">
-                <div class="text-[10px] text-gray-400 uppercase mb-2">JUKEBOX LEJÁTSZÓ</div>
-                <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3">
+                <div class="text-[10px] text-white uppercase mb-2 [text-shadow:_1px_1px_0_#000]">JUKEBOX LEJÁTSZÓ</div>
+                <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3 [text-shadow:_2px_2px_0_#000]">
                     Készenlétben
                 </div>
-                <!-- ÉLŐ RÁDIÓ kijelzés átlátszó háttérrel -->
-                <div class="text-[10px] text-red-500 font-bold flex items-center justify-center gap-1">
+                <!-- ÉLŐ RÁDIÓ kijelzés átlátszó háttérrel + körvonal -->
+                <div class="text-[10px] text-red-500 font-bold flex items-center justify-center gap-1 [text-shadow:_1px_1px_0_#000]">
                     <span class="live-dot">●</span> ÉLŐ RÁDIÓ
                 </div>
             </div>
 
             <!-- Sebesség -->
             <div class="mb-5 text-left">
-                <span class="block text-[10px] text-yellow-300 mb-2 drop-shadow-[1px_1px_0_#000]">SEBESSÉG:</span>
+                <span class="block text-[10px] text-yellow-300 mb-2 [text-shadow:_1px_1px_0_#000]">SEBESSÉG:</span>
                 <div class="flex gap-2">
                     <button class="speed-btn" onclick="setPlaybackSpeed(0.5, this)">0.5x</button>
                     <button class="speed-btn active" onclick="setPlaybackSpeed(1.0, this)">1.0x</button>
@@ -183,8 +183,8 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        const hungarianTracks = [
-            { name: 'C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc' },
+        // Csak magyar zenék maradtak
+        const tracks = [
             { name: 'Tankcsapda - Mennyország tourist', id: '270yvW1_l-E' },
             { name: 'Halott Pénz - Valami van a levegőben', id: '9kZ_q71p_J4' },
             { name: 'Wellhello - Apuveddmeg', id: '1w7Xw73W4Bc' },
@@ -195,12 +195,6 @@
             { name: 'Quimby - Most múlik pontosan', id: '9Q4x2w1_1kE' }
         ];
 
-        const englishTracks = [
-            { name: 'Imagine Dragons - Believer', id: '7qu1nvxaA0I' },
-            { name: 'Ed Sheeran - Shape of You', id: 'JGwWNGJdvx8' },
-            { name: 'Avicii - Wake Me Up', id: 'IcrbM1l_BoI' }
-        ];
-
         let ytPlayer = null;
         let currentTrack = null;
         let isPlaying = false;
@@ -208,7 +202,6 @@
         let isMuted = false;
         let currentSpeed = 1.0;
         let previousVolume = 80;
-        let hungarianCounter = 0;
 
         const playlistTitle = document.getElementById('playlist-title');
         const mainToggleBtn = document.getElementById('main-toggle-btn');
@@ -223,7 +216,7 @@
                 ytPlayer = new YT.Player('yt-player', {
                     height: '200',
                     width: '200',
-                    videoId: hungarianTracks[0].id,
+                    videoId: tracks[0].id,
                     playerVars: { 'autoplay': 0, 'controls': 0 },
                     events: { 'onStateChange': onPlayerStateChange, 'onError': onPlayerError }
                 });
@@ -247,16 +240,6 @@
             } catch (e) {}
         }
 
-        function getWeightedTrack() {
-            if (hungarianCounter < 3) {
-                hungarianCounter++;
-                return hungarianTracks[Math.floor(Math.random() * hungarianTracks.length)];
-            } else {
-                hungarianCounter = 0;
-                return englishTracks[Math.floor(Math.random() * englishTracks.length)];
-            }
-        }
-
         function startPlayback() {
             if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') return;
 
@@ -264,7 +247,7 @@
                 ytPlayer.playVideo();
                 isPaused = false;
             } else {
-                currentTrack = getWeightedTrack();
+                currentTrack = tracks[Math.floor(Math.random() * tracks.length)];
                 playlistTitle.textContent = currentTrack.name;
                 ytPlayer.loadVideoById(currentTrack.id);
                 ytPlayer.setPlaybackRate(currentSpeed);
