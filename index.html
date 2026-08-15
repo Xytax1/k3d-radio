@@ -183,10 +183,10 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // Csak magyar zenék maradtak
+        // Frissített és működő YouTube ID-k a magyar zenékhez
         const tracks = [
-            { name: 'Tankcsapda - Mennyország tourist', id: '270yvW1_l-E' },
-            { name: 'Halott Pénz - Valami van a levegőben', id: '9kZ_q71p_J4' },
+            { name: 'Tankcsapda - Mennyország tourist', id: 'BJceRTvD9Fo' },
+            { name: 'Halott Pénz - Valami van a levegőben', id: 'id-G0fgtTQY' },
             { name: 'Wellhello - Apuveddmeg', id: '1w7Xw73W4Bc' },
             { name: 'Bagossy Brothers Company - Olyan Ő', id: '7oJ4HnLq2M8' },
             { name: 'Majka & Curtis - Belehalok', id: '4H1W7k8gQ1o' },
@@ -279,6 +279,7 @@
         }
 
         function onPlayerError() {
+            // Ha egy videót tiltanak vagy hibás, automatikusan ugrik a következő magyar zenére
             isPaused = false;
             startPlayback();
         }
