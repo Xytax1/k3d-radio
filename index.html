@@ -162,7 +162,7 @@
         <!-- Hallgatószámláló a jobb felső sarokban -->
         <div class="absolute top-3 right-3 bg-black/80 border-2 border-black px-2.5 py-1.5 flex items-center gap-2 z-10">
             <span class="inline-block w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-            <span class="text-[9px] text-gray-300"><i class="fa-solid fa-user text-xs text-yellow-400 mr-1"></i><span id="listener-count">1,240</span></span>
+            <span class="text-[9px] text-gray-300"><i class="fa-solid fa-user text-xs text-yellow-400 mr-1"></i><span id="listener-count">1</span></span>
         </div>
 
         <!-- Fejléc -->
@@ -272,7 +272,6 @@
         let previousVolume = 80;
         let isSeeking = false;
         let progressInterval = null;
-        let currentListeners = 1240;
 
         const playlistSelect = document.getElementById('playlist-select');
         const playlistTitle = document.getElementById('playlist-title');
@@ -315,7 +314,27 @@
                 playlistSelect.appendChild(opt);
             });
             updateTrackDisplay(0);
-            startListenerSimulation();
+            updateListenerCount();
+        }
+
+        /* Valódi hallgatószám (ahányan megnyitották a lapot) */
+        function updateListenerCount() {
+            // Egyedi név a rádiódnak a CountAPI-n
+            const namespace = 'k3d-radio-listeners-xytax1';
+            const key = 'active_visits';
+
+            // Először adunk egyet a számlálóhoz (mert megnyitották), majd lekérjük
+            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.value) {
+                        listenerCountEl.textContent = data.value;
+                    }
+                })
+                .catch(() => {
+                    // Ha esetleg nem érné el a szervert, 1-ről indul
+                    listenerCountEl.textContent = "1";
+                });
         }
 
         function updateTrackDisplay(index) {
@@ -323,7 +342,6 @@
             const track = tracks[currentTrackIndex];
             playlistTitle.textContent = track.name;
 
-            // Élő adás vs Normál videó nézet váltása
             if (track.isLive) {
                 seekContainer.classList.add('hidden');
                 equalizer.classList.remove('hidden');
@@ -334,15 +352,6 @@
                 currentTimeEl.textContent = "00:00";
                 durationTimeEl.textContent = "00:00";
             }
-        }
-
-        /* Hallgatószámláló szimulációja */
-        function startListenerSimulation() {
-            setInterval(() => {
-                const change = Math.floor(Math.random() * 11) - 5;
-                currentListeners = Math.max(100, currentListeners + change);
-                listenerCountEl.textContent = currentListeners.toLocaleString('hu-HU');
-            }, 3000);
         }
 
         function formatTime(seconds) {
