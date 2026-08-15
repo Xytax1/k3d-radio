@@ -379,7 +379,7 @@
             } catch (e) {}
         }
 
-        // Segédfüggvény a YouTube videó címének lekérésére link vagy ID alapján
+        // Cím lekérése direkt ID-hoz (ha linket illesztenek be)
         async function fetchVideoTitle(videoId) {
             try {
                 const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
@@ -398,7 +398,7 @@
             const query = ytSearchInput.value.trim();
             if (!query) return;
 
-            // 1. YouTube URL vagy ID ellenőrzés
+            // 1. YouTube URL ellenőrzés
             const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
             const match = query.match(ytRegex);
 
@@ -410,6 +410,7 @@
                 return;
             }
 
+            // 2. Közvetlen YouTube ID ellenőrzés
             if (/^[a-zA-Z0-9_-]{11}$/.test(query)) {
                 statusText.innerHTML = `<span class="text-cyan-400">Cím lekérése...</span>`;
                 const videoTitle = await fetchVideoTitle(query);
@@ -418,14 +419,14 @@
                 return;
             }
 
-            // 2. Keresőszó alapú lekérdezés az Invidious API-n keresztül
+            // 3. Szöveges keresés (pl. "alone") az Invidious API-n keresztül, ami azonnal az 1. találatot adja
             statusText.innerHTML = `<span class="text-cyan-400">Keresés...</span>`;
             try {
                 const response = await fetch(`https://invidious.privacydev.net/api/v1/search?q=${encodeURIComponent(query)}&type=video`);
                 const data = await response.json();
 
                 if (data && data.length > 0) {
-                    const firstResult = data[0]; // Mindig az 1. találat
+                    const firstResult = data[0]; // Mindig az első találat
                     if (firstResult && firstResult.videoId) {
                         addNewCustomTrack(firstResult.videoId, firstResult.title);
                         ytSearchInput.value = '';
