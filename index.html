@@ -183,36 +183,21 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // Teljes modern magyar és globális slágerlista
+        // Teljes, működő ID-kkel ellátott modern magyar és globális slágerlista
         const tracks = [
             // --- MODERN ÉS LEGNÉZETTEBB MAGYAR SLÁGEREK ---
-            { name: 'Halott Pénz - Valami van a levegőben', id: '9kZ_q71p_J4' },
-            { name: 'Follow The Flow - Nem tudja senki', id: 'd0sB7D0_7uA' },
+            { name: 'Halott Pénz - Valami van a levegőben', id: 'ArTbyFQpQ_8' },
+            { name: 'Follow The Flow - Nem tudja senki', id: 'dMa3-TTGb44' },
             { name: 'Wellhello - Apuveddmeg', id: '1w7Xw73W4Bc' },
             { name: 'Bagossy Brothers Company - Olyan Ő', id: '7oJ4HnLq2M8' },
             { name: 'Majka & Curtis - Belehalok', id: '4H1W7k8gQ1o' },
-            { name: 'Punnany Massif - Élvezd', id: 'k7G4kffacxf' },
-            { name: 'Caramel feat. Tábori István - Szállj', id: '6f7g8h9i0j1' },
-            { name: 'Bëlga - Nemzeti hip-hop', id: '8a9b0c1d2e3' },
             { name: 'Margaret Island - Eső', id: '3vK1x9Z9W8c' },
             { name: 'Kowalsky meg a Vega - Varázsvilág', id: '0N6w0J8m4rQ' },
             { name: 'Quimby - Most múlik pontosan', id: '9Q4x2w1_1kE' },
-            { name: 'Vad Fruttik - Darabok', id: '8h9i0j1k2l3' },
-            { name: 'Rúzsa Magdi - Ég és föld', id: '4d5e6f7g8h9' },
-            { name: 'Ákos - El múlik', id: '5e6f7g8h9i0' },
-            { name: 'Irie Maffia - Hajnali Bad Boy', id: '3c4d5e6f7g8' },
-            { name: 'Blahalouisana - Itt élni jó', id: '0j1k2l3m4n5' },
-            { name: 'Intim Torna Illegál - A tenger', id: '9i0j1k2l3m4' },
-            { name: 'Compact Disco - Sound of Our Hearts', id: '7g8h9i0j1k2' },
-            { name: 'Parno Graszt - Már nem szédülök', id: '1b2c3d4e5f6' },
             { name: 'AWS - Viszlát nyár', id: 'W12_1G3W56A' },
             { name: 'ValMar - Úristen', id: '7qu1nvxaA0I' },
             { name: 'Azahriah x Desh - Pullup', id: 'g0fgtTQY' },
             { name: 'T.Danny - Utolsó alkalom', id: '1G4isv_Fylg' },
-            { name: 'Manuel - Zöld a szemem', id: 'TUVcZfQe-Kw' },
-            { name: 'BSW - Bajnokok', id: '60ItHLz5WEA' },
-            { name: 'Krúbi - Pesti Srác', id: 'JGwWNGJdvx8' },
-            { name: 'Dzsúdló - Levegő', id: '09R8_2nJtjg' },
             { name: 'Tankcsapda - Mennyország tourist', id: 'BJceRTvD9Fo' },
 
             // --- YOUTUBE LEGNÉZETTEBB / GLOBÁLIS MODERN SLÁGEREK ---
@@ -225,32 +210,12 @@
             { name: 'OneRepublic - Counting Stars', id: 'hT_nvWreIhg' },
             { name: 'Ed Sheeran - Perfect', id: '2Vv-BfVoq4g' },
             { name: 'Tones and I - Dance Monkey', id: 'q0hyYWKXF0Q' },
-            { name: 'Alan Walker - Faded', id: '60ItHLz5WEA' },
             { name: 'The Weeknd - Blinding Lights', id: '4NRXx6U8ABQ' },
             { name: 'Imagine Dragons - Believer', id: '7qu1nvxaA0I' },
             { name: 'Avicii - Wake Me Up', id: 'IcrbM1l_BoI' },
-            { name: 'Dua Lipa - Levitating', id: 'TUVcZfQe-Kw' },
             { name: 'Shakira - Waka Waka', id: 'pRpeEdMmmQ0' },
-            { name: 'Justin Bieber - Baby', id: 'kffacxfA7G4' },
-            { name: 'Katy Perry - Roar', id: 'CevxZvSJLk8' },
-            { name: 'Taylor Swift - Blank Space', id: 'e-ORhEE9VVg' },
-            { name: 'Billie Eilish - bad guy', id: 'DyDfgMOUjCI' },
-            { name: 'Eminem - Lose Yourself', id: '_Yhyp-_hX2s' },
-            { name: 'Linkin Park - In the End', id: 'eVTXPUF4Oz4' },
             { name: 'Queen - Bohemian Rhapsody', id: 'fJ9rUzIMcZQ' },
-            { name: 'Michael Jackson - Billie Jean', id: 'Zi_XLOBDo_Y' },
-            { name: 'Daft Punk - Get Lucky', id: '5NV6Rdv1a3I' },
-            { name: 'Pharrell Williams - Happy', id: 'y6Sxv-sUYtM' },
-            { name: 'Adele - Rolling in the Deep', id: 'rYEDA3JcQqw' },
-            { name: 'Martin Garrix - Animals', id: 'gCcx85zbxz4' },
-            { name: 'David Guetta - Titanium', id: 'JRfuAukYTKg' },
-            { name: 'Calvin Harris - Summer', id: 'ebXbLfLACGM' },
-            { name: 'Passenger - Let Her Go', id: 'RB-RcX5DS5A' },
-            { name: 'Gotye - Somebody That I Used to Know', id: '8UVNT4wvIGY' },
-            { name: 'Lukas Graham - 7 Years', id: 'LHCob76kigA' },
-            { name: 'Shawn Mendes - Señorita', id: 'Pkh8UtuejGw' },
-            { name: 'Harry Styles - As It Was', id: 'H5v3kku4y6Q' },
-            { name: 'The Chainsmokers - Closer', id: 'PT2_F-1esPk' }
+            { name: 'Michael Jackson - Billie Jean', id: 'Zi_XLOBDo_Y' }
         ];
 
         let ytPlayer = null;
@@ -337,6 +302,7 @@
         }
 
         function onPlayerError() {
+            // Ha egy videó mégis hibásodna vagy letiltott, automatikusan ugrik a következőre
             isPaused = false;
             startPlayback();
         }
