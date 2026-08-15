@@ -157,7 +157,7 @@
     <!-- Rádió Konténer -->
     <div class="mc-card w-full max-w-md text-white text-center relative my-4">
         
-        <!-- Hallgatószám -->
+        <!-- Valós Valós Idejű Hallgatószám -->
         <div class="absolute top-3 right-3 bg-black/80 border-2 border-black px-2.5 py-1.5 flex items-center gap-2 z-10">
             <span class="inline-block w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
             <span class="text-[9px] text-gray-300"><i class="fa-solid fa-user text-xs text-yellow-400 mr-1"></i><span id="listener-count">1</span></span>
@@ -258,7 +258,48 @@
     <!-- YouTube API JS -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
+    <!-- Firebase SDK-k a valós idejű számlálóhoz -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
     <script>
+        // --- VALÓS IDEJŰ HALLGATÓSZÁM (FIREBASE KONFIGURÁCIÓ) ---
+        // Ide kell beillesztened a saját ingyenes Firebase projekted adatait:
+        const firebaseConfig = {
+            apiKey: "IDE_JÖN_A_SAJÁT_API_KULCSOD",
+            authDomain: "sajat-projekt.firebaseapp.com",
+            databaseURL: "https://sajat-projekt-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "sajat-projekt",
+            storageBucket: "sajat-projekt.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        // Firebase inicializálás és aktív látogatók követése
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.database();
+            const listenerRef = db.ref('active_listeners');
+            const connectedRef = db.ref('.info/connected');
+
+            connectedRef.on('value', (snap) => {
+                if (snap.val() === true) {
+                    const myConnectionRef = listenerRef.push();
+                    // Ha a felhasználó bezárja az oldalt vagy elmegy, automatikusan törlődik a számlálóból
+                    myConnectionRef.onDisconnect().remove();
+                    myConnectionRef.set(true);
+                }
+            });
+
+            listenerRef.on('value', (snap) => {
+                const count = snap.numChildren();
+                document.getElementById('listener-count').textContent = count > 0 ? count : 1;
+            });
+        } catch (e) {
+            console.log("Firebase nincs még beállítva, alapértelmezett érték mutatása.");
+            document.getElementById('listener-count').textContent = "1";
+        }
+
         const tracks = [
             { type: 'yt', name: '🟩 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc', isLive: false },
             { type: 'radio', name: '📻 SomaFM Groove Salad (Ambient)', url: 'https://ice1.somafm.com/groovesalad-128-mp3', isLive: true },
@@ -267,16 +308,6 @@
             { type: 'radio', name: '📻 Drone Zone (Atmospheric)', url: 'https://ice1.somafm.com/dronezone-128-mp3', isLive: true },
             { type: 'radio', name: '📻 PopTron (Electropop)', url: 'https://ice1.somafm.com/poptron-128-mp3', isLive: true }
         ];
-
-        // --- Valós idejű hallgatószám szimulátor ---
-        function updateListeners() {
-            const el = document.getElementById('listener-count');
-            let current = parseInt(el.textContent);
-            const change = Math.floor(Math.random() * 5) - 2;
-            current = Math.max(1, Math.min(50, current + change));
-            el.textContent = current;
-        }
-        setInterval(updateListeners, 4000);
 
         let ytPlayer = null;
         let audioPlayer = new Audio();
