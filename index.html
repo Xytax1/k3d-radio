@@ -140,12 +140,6 @@
     <!-- Rádió Konténer -->
     <div class="mc-card w-full max-w-md text-white text-center relative my-4">
         
-        <!-- Valós Idejű Hallgatószám -->
-        <div class="absolute top-3 right-3 bg-black/80 border-2 border-black px-2.5 py-1.5 flex items-center gap-2 z-10">
-            <span class="inline-block w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-            <span class="text-[9px] text-gray-300"><i class="fa-solid fa-user text-xs text-yellow-400 mr-1"></i><span id="listener-count">1</span></span>
-        </div>
-
         <!-- Fejléc -->
         <div class="mc-header py-7 px-6 text-left">
             <h1 class="text-xl sm:text-2xl text-yellow-300 tracking-wider drop-shadow-[3px_3px_0_#000]">
@@ -215,46 +209,7 @@
     <!-- YouTube API JS -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
-    <!-- Firebase SDK-k -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
     <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyBzKOcbb-nY_P9EK-QrkTjHg2BEY3plrQ4",
-          authDomain: "k3d-radio.firebaseapp.com",
-          databaseURL: "https://k3d-radio-default-rtdb.europe-west1.firebasedatabase.app",
-          projectId: "k3d-radio",
-          storageBucket: "k3d-radio.firebasestorage.app",
-          messagingSenderId: "680406397835",
-          appId: "1:680406397835:web:f701d8bf8678ecfc04f58e"
-        };
-
-        let db, radioStateRef;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-            const listenerRef = db.ref('active_listeners');
-            const connectedRef = db.ref('.info/connected');
-
-            connectedRef.on('value', (snap) => {
-                if (snap.val() === true) {
-                    const myConnectionRef = listenerRef.push();
-                    myConnectionRef.onDisconnect().remove();
-                    myConnectionRef.set(true);
-                }
-            });
-
-            listenerRef.on('value', (snap) => {
-                const count = snap.numChildren();
-                document.getElementById('listener-count').textContent = count > 0 ? count : 1;
-            });
-
-            radioStateRef = db.ref('radio_state');
-        } catch (e) {
-            document.getElementById('listener-count').textContent = "1";
-        }
-
         const tracks = [
             { type: 'yt', name: '🇭🇺 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc' },
             { type: 'yt', name: '🇭🇺 Tankcsapda - Mennyország tourist', id: '270yvW1_l-E' },
@@ -283,7 +238,6 @@
         let previousVolume = 80;
         let isSeeking = false;
         let progressInterval = null;
-        let isInitialized = false;
 
         const playlistTitle = document.getElementById('playlist-title');
         const statusText = document.getElementById('status-text');
@@ -300,76 +254,32 @@
         const currentTimeEl = document.getElementById('current-time');
         const durationTimeEl = document.getElementById('duration-time');
 
-        function initApp() {
-            if (isInitialized) return;
-            isInitialized = true;
-            if (radioStateRef) {
-                radioStateRef.on('value', (snapshot) => {
-                    const state = snapshot.val();
-                    if (state) {
-                        syncWithServerState(state);
-                    } else {
-                        pickAndBroadcastNewTrack();
-                    }
-                });
-            } else {
-                updateTrackDisplay(0);
-            }
-        }
-
-        function pickAndBroadcastNewTrack() {
-            const newIndex = Math.floor(Math.random() * tracks.length);
-            const newState = {
-                trackIndex: newIndex,
-                startTime: Date.now()
-            };
-            if (radioStateRef) {
-                radioStateRef.set(newState);
-            }
-        }
-
-        function syncWithServerState(state) {
-            currentTrackIndex = state.trackIndex;
-            if (currentTrackIndex >= tracks.length) currentTrackIndex = 0;
-            updateTrackDisplay(currentTrackIndex);
-
-            const track = tracks[currentTrackIndex];
-            const elapsedSec = (Date.now() - state.startTime) / 1000;
-
-            if (isPlaying && ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
-                ytPlayer.loadVideoById({videoId: track.id, startSeconds: elapsedSec});
-                ytPlayer.setPlaybackRate(currentSpeed);
-                ytPlayer.setVolume(volumeSlider.value);
-                ytPlayer.playVideo();
-            }
-        }
-
         function onYouTubeIframeAPIReady() {
             try {
                 ytPlayer = new YT.Player('yt-player', {
                     height: '200',
                     width: '200',
-                    videoId: tracks[0].id || '',
+                    videoId: tracks[0].id,
                     playerVars: { 'autoplay': 0, 'controls': 0 },
                     events: {
+                        'onReady': onPlayerReady,
                         'onStateChange': onPlayerStateChange,
                         'onError': onPlayerError
                     }
                 });
-            } catch (e) {}
-            initApp();
+            } catch (e) {
+                console.error("YouTube Player init error:", e);
+            }
+        }
+
+        function onPlayerReady() {
+            updateTrackDisplay(currentTrackIndex);
         }
 
         function updateTrackDisplay(index) {
             currentTrackIndex = parseInt(index);
             const track = tracks[currentTrackIndex];
             playlistTitle.textContent = track.name;
-
-            equalizer.classList.add('hidden');
-            seekContainer.classList.remove('hidden');
-            seekSlider.value = 0;
-            currentTimeEl.textContent = "00:00";
-            durationTimeEl.textContent = "00:00";
         }
 
         function playClickSound() {
@@ -390,34 +300,22 @@
         }
 
         function startPlayback() {
-            const track = tracks[currentTrackIndex];
-            statusText.innerHTML = `<span class="text-cyan-400">Csatlakozás...</span>`;
-
-            if (radioStateRef) {
-                radioStateRef.once('value', (snapshot) => {
-                    const state = snapshot.val();
-                    let elapsedSec = 0;
-                    if (state && state.startTime) {
-                        elapsedSec = (Date.now() - state.startTime) / 1000;
-                    }
-
-                    if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
-                        try {
-                            ytPlayer.loadVideoById({videoId: track.id, startSeconds: elapsedSec > 0 ? elapsedSec : 0});
-                            ytPlayer.setPlaybackRate(currentSpeed);
-                            ytPlayer.setVolume(volumeSlider.value);
-                            ytPlayer.playVideo();
-                        } catch (e) {
-                            statusText.innerHTML = `<span class="text-orange-400">Kattints a Lejátszásra!</span>`;
-                        }
-                    }
-                });
+            if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') {
+                statusText.innerHTML = `<span class="text-red-400">Töltődjön be a YouTube...</span>`;
+                return;
             }
-            startProgressUpdate();
+
+            const track = tracks[currentTrackIndex];
+            ytPlayer.loadVideoById(track.id);
+            ytPlayer.setPlaybackRate(currentSpeed);
+            ytPlayer.setVolume(volumeSlider.value);
+            ytPlayer.playVideo();
         }
 
         function stopPlayback() {
-            if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+            if (ytPlayer && ytPlayer.pauseVideo) {
+                ytPlayer.pauseVideo();
+            }
             isPlaying = false;
             updateUIState(false);
             stopProgressUpdate();
@@ -425,8 +323,11 @@
 
         function togglePlayback() {
             playClickSound();
-            if (isPlaying) stopPlayback();
-            else startPlayback();
+            if (isPlaying) {
+                stopPlayback();
+            } else {
+                startPlayback();
+            }
         }
 
         function onPlayerStateChange(event) {
@@ -439,17 +340,18 @@
                 updateUIState(false);
                 stopProgressUpdate();
             } else if (event.data === YT.PlayerState.ENDED) {
-                if (radioStateRef) {
-                    pickAndBroadcastNewTrack();
-                }
+                // Következő szám véletlenszerűen vagy sorban
+                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+                updateTrackDisplay(currentTrackIndex);
+                startPlayback();
             }
         }
 
         function onPlayerError() {
-            statusText.innerHTML = `<span class="text-red-400">Hiba! Újratöltés...</span>`;
-            if (radioStateRef) {
-                pickAndBroadcastNewTrack();
-            }
+            statusText.innerHTML = `<span class="text-red-400">Lejátszási hiba, ugrás...</span>`;
+            currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+            updateTrackDisplay(currentTrackIndex);
+            startPlayback();
         }
 
         function updateUIState(playing) {
@@ -459,6 +361,8 @@
                 btnIcon.className = 'fa-solid fa-square';
                 btnText.textContent = 'LEÁLLÍTÁS';
                 statusText.innerHTML = `<span class="text-green-400">K3D RÁDIÓ SZÓL</span>`;
+                equalizer.classList.add('hidden');
+                seekContainer.classList.remove('hidden');
             } else {
                 mainToggleBtn.classList.remove('btn-mc-stop');
                 mainToggleBtn.classList.add('btn-mc-play');
