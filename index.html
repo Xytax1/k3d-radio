@@ -144,7 +144,6 @@
                 <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3 [text-shadow:_2px_2px_0_#000]">
                     Készenlétben
                 </div>
-                <!-- ÉLŐ RÁDIÓ kijelzés átlátszó háttérrel + körvonal -->
                 <div class="text-[10px] text-red-500 font-bold flex items-center justify-center gap-1 [text-shadow:_1px_1px_0_#000]">
                     <span class="live-dot">●</span> ÉLŐ RÁDIÓ
                 </div>
@@ -183,40 +182,33 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // Teljes, működő ID-kkel ellátott modern magyar és globális slágerlista
+        // Itt mostantól közvetlenül a TELJES YOUTUBE LINKET adhatod meg!
         const tracks = [
-            // --- MODERN ÉS LEGNÉZETTEBB MAGYAR SLÁGEREK ---
-            { name: 'Halott Pénz - Valami van a levegőben', id: 'ArTbyFQpQ_8' },
-            { name: 'Follow The Flow - Nem tudja senki', id: 'dMa3-TTGb44' },
-            { name: 'Wellhello - Apuveddmeg', id: '1w7Xw73W4Bc' },
-            { name: 'Bagossy Brothers Company - Olyan Ő', id: '7oJ4HnLq2M8' },
-            { name: 'Majka & Curtis - Belehalok', id: '4H1W7k8gQ1o' },
-            { name: 'Margaret Island - Eső', id: '3vK1x9Z9W8c' },
-            { name: 'Kowalsky meg a Vega - Varázsvilág', id: '0N6w0J8m4rQ' },
-            { name: 'Quimby - Most múlik pontosan', id: '9Q4x2w1_1kE' },
-            { name: 'AWS - Viszlát nyár', id: 'W12_1G3W56A' },
-            { name: 'ValMar - Úristen', id: '7qu1nvxaA0I' },
-            { name: 'Azahriah x Desh - Pullup', id: 'g0fgtTQY' },
-            { name: 'T.Danny - Utolsó alkalom', id: '1G4isv_Fylg' },
-            { name: 'Tankcsapda - Mennyország tourist', id: 'BJceRTvD9Fo' },
-
-            // --- YOUTUBE LEGNÉZETTEBB / GLOBÁLIS MODERN SLÁGEREK ---
-            { name: 'Luis Fonsi - Despacito ft. Daddy Yankee', id: 'kJQP7kiw5Fk' },
-            { name: 'Ed Sheeran - Shape of You', id: 'JGwWNGJdvx8' },
-            { name: 'Wiz Khalifa - See You Again ft. Charlie Puth', id: 'RgKAFK5djSk' },
-            { name: 'Mark Ronson - Uptown Funk ft. Bruno Mars', id: 'OPf0YbXqDm0' },
-            { name: 'Psy - Gangnam Style', id: '9bZkp7q19f0' },
-            { name: 'Maroon 5 - Sugar', id: '09R8_2nJtjg' },
-            { name: 'OneRepublic - Counting Stars', id: 'hT_nvWreIhg' },
-            { name: 'Ed Sheeran - Perfect', id: '2Vv-BfVoq4g' },
-            { name: 'Tones and I - Dance Monkey', id: 'q0hyYWKXF0Q' },
-            { name: 'The Weeknd - Blinding Lights', id: '4NRXx6U8ABQ' },
-            { name: 'Imagine Dragons - Believer', id: '7qu1nvxaA0I' },
-            { name: 'Avicii - Wake Me Up', id: 'IcrbM1l_BoI' },
-            { name: 'Shakira - Waka Waka', id: 'pRpeEdMmmQ0' },
-            { name: 'Queen - Bohemian Rhapsody', id: 'fJ9rUzIMcZQ' },
-            { name: 'Michael Jackson - Billie Jean', id: 'Zi_XLOBDo_Y' }
+            { name: 'Halott Pénz - Valami van a levegőben', url: 'https://www.youtube.com/watch?v=ArTbyFQpQ_8' },
+            { name: 'Follow The Flow - Nem tudja senki', url: 'https://www.youtube.com/watch?v=dMa3-TTGb44' },
+            { name: 'Wellhello - Apuveddmeg', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
+            { name: 'Bagossy Brothers Company - Olyan Ő', url: 'https://www.youtube.com/watch?v=7oJ4HnLq2M8' },
+            { name: 'Majka & Curtis - Belehalok', url: 'https://www.youtube.com/watch?v=4H1W7k8gQ1o' },
+            { name: 'Margaret Island - Eső', url: 'https://www.youtube.com/watch?v=3vK1x9Z9W8c' },
+            { name: 'Kowalsky meg a Vega - Varázsvilág', url: 'https://www.youtube.com/watch?v=0N6w0J8m4rQ' },
+            { name: 'Quimby - Most múlik pontosan', url: 'https://www.youtube.com/watch?v=9Q4x2w1_1kE' },
+            { name: 'AWS - Viszlát nyár', url: 'https://www.youtube.com/watch?v=W12_1G3W56A' },
+            { name: 'ValMar - Úristen', url: 'https://www.youtube.com/watch?v=7qu1nvxaA0I' },
+            { name: 'Azahriah x Desh - Pullup', url: 'https://www.youtube.com/watch?v=g0fgtTQY' },
+            { name: 'T.Danny - Utolsó alkalom', url: 'https://www.youtube.com/watch?v=1G4isv_Fylg' },
+            { name: 'Tankcsapda - Mennyország tourist', url: 'https://www.youtube.com/watch?v=BJceRTvD9Fo' },
+            { name: 'Luis Fonsi - Despacito', url: 'https://www.youtube.com/watch?v=kJQP7kiw5Fk' },
+            { name: 'Ed Sheeran - Shape of You', url: 'https://www.youtube.com/watch?v=JGwWNGJdvx8' },
+            { name: 'The Weeknd - Blinding Lights', url: 'https://www.youtube.com/watch?v=4NRXx6U8ABQ' },
+            { name: 'Queen - Bohemian Rhapsody', url: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ' }
         ];
+
+        // Segédfüggvény, ami automatikusan kinyeri a linkből a videó ID-t (kezel sima és youtu.be linkeket is)
+        function getYouTubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
 
         let ytPlayer = null;
         let currentTrack = null;
@@ -236,10 +228,11 @@
 
         function onYouTubeIframeAPIReady() {
             try {
+                const firstId = getYouTubeId(tracks[0].url);
                 ytPlayer = new YT.Player('yt-player', {
                     height: '200',
                     width: '200',
-                    videoId: tracks[0].id,
+                    videoId: firstId,
                     playerVars: { 'autoplay': 0, 'controls': 0 },
                     events: { 'onStateChange': onPlayerStateChange, 'onError': onPlayerError }
                 });
@@ -271,8 +264,15 @@
                 isPaused = false;
             } else {
                 currentTrack = tracks[Math.floor(Math.random() * tracks.length)];
+                const videoId = getYouTubeId(currentTrack.url);
+                
+                if (!videoId) {
+                    startPlayback(); // Ha hibás a link, ugorjon a következőre
+                    return;
+                }
+
                 playlistTitle.textContent = currentTrack.name;
-                ytPlayer.loadVideoById(currentTrack.id);
+                ytPlayer.loadVideoById(videoId);
                 ytPlayer.setPlaybackRate(currentSpeed);
                 ytPlayer.setVolume(volumeSlider.value);
                 ytPlayer.playVideo();
@@ -302,7 +302,6 @@
         }
 
         function onPlayerError() {
-            // Ha egy videó mégis hibásodna vagy letiltott, automatikusan ugrik a következőre
             isPaused = false;
             startPlayback();
         }
