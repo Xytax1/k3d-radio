@@ -21,19 +21,22 @@
         }
 
         body {
-            /* Új, stabil háttérkép link sötétítővel és homályosítással */
+            /* Beállítva a Minecraft háttérkép sötétítővel */
             background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-                        url('https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+                        url('https://i.imgur.com/xP7hK7f.jpeg') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
         }
 
         body::before {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+            /* Homályosítás (Blur) mértéke */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             z-index: -1;
         }
 
