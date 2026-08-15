@@ -85,25 +85,6 @@
             font-weight: bold;
         }
 
-        .mc-eq-bar {
-            width: 14px;
-            height: 14px;
-            background-color: #444444;
-            border: 1px solid #000000;
-        }
-
-        .playing .mc-eq-bar:nth-child(1) { animation: mc-eq 0.6s infinite alternate steps(2); }
-        .playing .mc-eq-bar:nth-child(2) { animation: mc-eq 0.8s infinite alternate steps(3) 0.2s; }
-        .playing .mc-eq-bar:nth-child(3) { animation: mc-eq 0.5s infinite alternate steps(2) 0.1s; }
-        .playing .mc-eq-bar:nth-child(4) { animation: mc-eq 0.9s infinite alternate steps(3) 0.3s; }
-        .playing .mc-eq-bar:nth-child(5) { animation: mc-eq 0.7s infinite alternate steps(2) 0.15s; }
-
-        @keyframes mc-eq {
-            0% { background-color: #55ff55; }
-            50% { background-color: #ffff55; }
-            100% { background-color: #ff5555; }
-        }
-
         input[type=range] {
             -webkit-appearance: none;
             background: #111111;
@@ -158,17 +139,8 @@
                     <span>Kattints a lejátszásra!</span>
                 </div>
 
-                <!-- Ekvalizer -->
-                <div id="equalizer" class="flex items-center justify-center gap-3 h-12 bg-[#111111] p-2 border-2 border-black">
-                    <div class="mc-eq-bar"></div>
-                    <div class="mc-eq-bar"></div>
-                    <div class="mc-eq-bar"></div>
-                    <div class="mc-eq-bar"></div>
-                    <div class="mc-eq-bar"></div>
-                </div>
-
                 <!-- Tekerő csúszka -->
-                <div id="seek-container" class="hidden bg-[#111111] p-3 border-2 border-black">
+                <div id="seek-container" class="bg-[#111111] p-3 border-2 border-black">
                     <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" class="w-full cursor-pointer mb-2">
                     <div class="flex justify-between text-[9px] text-gray-300">
                         <span id="current-time">00:00</span>
@@ -211,28 +183,29 @@
 
     <script>
         const tracks = [
-            { type: 'yt', name: '🇭🇺 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc' },
-            { type: 'yt', name: '🇭🇺 Tankcsapda - Mennyország tourist', id: '270yvW1_l-E' },
-            { type: 'yt', name: '🇭🇺 Halott Pénz - Valami van a levegőben', id: '9kZ_q71p_J4' },
-            { type: 'yt', name: '🇭🇺 Wellhello - Apuveddmeg', id: '1w7Xw73W4Bc' },
-            { type: 'yt', name: '🇭🇺 Bagossy Brothers Company - Olyan Ő', id: '7oJ4HnLq2M8' },
-            { type: 'yt', name: '🇭🇺 Majka & Curtis - Belehalok', id: '4H1W7k8gQ1o' },
-            { type: 'yt', name: '🇭🇺 Kowalsky meg a Vega - Varázsvilág', id: '0N6w0J8m4rQ' },
-            { type: 'yt', name: '🇭🇺 Margaret Island - Eső', id: '3vK1x9Z9W8c' },
-            { type: 'yt', name: '🇭🇺 Quimby - Most múlik pontosan', id: '9Q4x2w1_1kE' },
-            { type: 'yt', name: '🇬🇧 Coldplay - Viva La Vida', id: 'dvgZkm7_0eM' },
-            { type: 'yt', name: '🇬🇧 Imagine Dragons - Believer', id: '7qu1nvxaA0I' },
-            { type: 'yt', name: '🇬🇧 Ed Sheeran - Shape of You', id: 'JGwWNGJdvx8' },
-            { type: 'yt', name: '🇬🇧 Avicii - Wake Me Up', id: 'IcrbM1l_BoI' },
-            { type: 'yt', name: '🇬🇧 Queen - Bohemian Rhapsody', id: 'fJ9rUzIMcZQ' },
-            { type: 'yt', name: '🇬🇧 Daft Punk - Get Lucky', id: '5NV6Rdv1a3I' },
-            { type: 'yt', name: '🇬🇧 The Weeknd - Blinding Lights', id: '4NRXx6U8ABQ' },
-            { type: 'yt', name: '🇬🇧 OneRepublic - Counting Stars', id: 'hT_nvWreIhg' }
+            { name: '🇭🇺 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc' },
+            { name: '🇭🇺 Tankcsapda - Mennyország tourist', id: '270yvW1_l-E' },
+            { name: '🇭🇺 Halott Pénz - Valami van a levegőben', id: '9kZ_q71p_J4' },
+            { name: '🇭🇺 Wellhello - Apuveddmeg', id: '1w7Xw73W4Bc' },
+            { name: '🇭🇺 Bagossy Brothers Company - Olyan Ő', id: '7oJ4HnLq2M8' },
+            { name: '🇭🇺 Majka & Curtis - Belehalok', id: '4H1W7k8gQ1o' },
+            { name: '🇭🇺 Kowalsky meg a Vega - Varázsvilág', id: '0N6w0J8m4rQ' },
+            { name: '🇭🇺 Margaret Island - Eső', id: '3vK1x9Z9W8c' },
+            { name: '🇭🇺 Quimby - Most múlik pontosan', id: '9Q4x2w1_1kE' },
+            { name: '🇬🇧 Coldplay - Viva La Vida', id: 'dvgZkm7_0eM' },
+            { name: '🇬🇧 Imagine Dragons - Believer', id: '7qu1nvxaA0I' },
+            { name: '🇬🇧 Ed Sheeran - Shape of You', id: 'JGwWNGJdvx8' },
+            { name: '🇬🇧 Avicii - Wake Me Up', id: 'IcrbM1l_BoI' },
+            { name: '🇬🇧 Queen - Bohemian Rhapsody', id: 'fJ9rUzIMcZQ' },
+            { name: '🇬🇧 Daft Punk - Get Lucky', id: '5NV6Rdv1a3I' },
+            { name: '🇬🇧 The Weeknd - Blinding Lights', id: '4NRXx6U8ABQ' },
+            { name: '🇬🇧 OneRepublic - Counting Stars', id: 'hT_nvWreIhg' }
         ];
 
         let ytPlayer = null;
         let currentTrackIndex = 0;
         let isPlaying = false;
+        let isPaused = false;
         let isMuted = false;
         let currentSpeed = 1.0;
         let previousVolume = 80;
@@ -248,8 +221,6 @@
         const muteBtn = document.getElementById('mute-btn');
         const muteIcon = document.getElementById('mute-icon');
 
-        const equalizer = document.getElementById('equalizer');
-        const seekContainer = document.getElementById('seek-container');
         const seekSlider = document.getElementById('seek-slider');
         const currentTimeEl = document.getElementById('current-time');
         const durationTimeEl = document.getElementById('duration-time');
@@ -262,24 +233,11 @@
                     videoId: tracks[0].id,
                     playerVars: { 'autoplay': 0, 'controls': 0 },
                     events: {
-                        'onReady': onPlayerReady,
                         'onStateChange': onPlayerStateChange,
                         'onError': onPlayerError
                     }
                 });
-            } catch (e) {
-                console.error("YouTube Player init error:", e);
-            }
-        }
-
-        function onPlayerReady() {
-            updateTrackDisplay(currentTrackIndex);
-        }
-
-        function updateTrackDisplay(index) {
-            currentTrackIndex = parseInt(index);
-            const track = tracks[currentTrackIndex];
-            playlistTitle.textContent = track.name;
+            } catch (e) {}
         }
 
         function playClickSound() {
@@ -301,15 +259,28 @@
 
         function startPlayback() {
             if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') {
-                statusText.innerHTML = `<span class="text-red-400">Töltődjön be a YouTube...</span>`;
+                statusText.innerHTML = `<span class="text-yellow-400">Töltődik a YouTube...</span>`;
                 return;
             }
 
-            const track = tracks[currentTrackIndex];
-            ytPlayer.loadVideoById(track.id);
-            ytPlayer.setPlaybackRate(currentSpeed);
-            ytPlayer.setVolume(volumeSlider.value);
-            ytPlayer.playVideo();
+            if (isPaused) {
+                // Ha csak szüneteltetve volt, ott folytatjuk ahol tartott
+                ytPlayer.playVideo();
+                isPaused = false;
+            } else {
+                // Teljesen új indítás vagy új szám esetén véletlenszerű sorsolás
+                currentTrackIndex = Math.floor(Math.random() * tracks.length);
+                const track = tracks[currentTrackIndex];
+                playlistTitle.textContent = track.name;
+                ytPlayer.loadVideoById(track.id);
+                ytPlayer.setPlaybackRate(currentSpeed);
+                ytPlayer.setVolume(volumeSlider.value);
+                ytPlayer.playVideo();
+            }
+
+            isPlaying = true;
+            updateUIState(true);
+            startProgressUpdate();
         }
 
         function stopPlayback() {
@@ -317,6 +288,7 @@
                 ytPlayer.pauseVideo();
             }
             isPlaying = false;
+            isPaused = true;
             updateUIState(false);
             stopProgressUpdate();
         }
@@ -331,26 +303,16 @@
         }
 
         function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.PLAYING) {
-                isPlaying = true;
-                updateUIState(true);
-                startProgressUpdate();
-            } else if (event.data === YT.PlayerState.PAUSED) {
-                isPlaying = false;
-                updateUIState(false);
-                stopProgressUpdate();
-            } else if (event.data === YT.PlayerState.ENDED) {
-                // Következő szám véletlenszerűen vagy sorban
-                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-                updateTrackDisplay(currentTrackIndex);
+            if (event.data === YT.PlayerState.ENDED) {
+                // Ha vége a számnak, sorsol újat random
+                isPaused = false;
                 startPlayback();
             }
         }
 
         function onPlayerError() {
-            statusText.innerHTML = `<span class="text-red-400">Lejátszási hiba, ugrás...</span>`;
-            currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-            updateTrackDisplay(currentTrackIndex);
+            statusText.innerHTML = `<span class="text-red-400">Hiba, új szám sorsolása...</span>`;
+            isPaused = false;
             startPlayback();
         }
 
@@ -361,8 +323,6 @@
                 btnIcon.className = 'fa-solid fa-square';
                 btnText.textContent = 'LEÁLLÍTÁS';
                 statusText.innerHTML = `<span class="text-green-400">K3D RÁDIÓ SZÓL</span>`;
-                equalizer.classList.add('hidden');
-                seekContainer.classList.remove('hidden');
             } else {
                 mainToggleBtn.classList.remove('btn-mc-stop');
                 mainToggleBtn.classList.add('btn-mc-play');
