@@ -221,13 +221,13 @@
 
     <script>
         const firebaseConfig = {
-            apiKey: "IDE_JÖN_A_SAJÁT_API_KULCSOD",
-            authDomain: "sajat-projekt.firebaseapp.com",
-            databaseURL: "https://sajat-projekt-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "sajat-projekt",
-            storageBucket: "sajat-projekt.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
+          apiKey: "AIzaSyBzKOcbb-nY_P9EK-QrkTjHg2BEY3plrQ4",
+          authDomain: "k3d-radio.firebaseapp.com",
+          databaseURL: "https://k3d-radio-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "k3d-radio",
+          storageBucket: "k3d-radio.firebasestorage.app",
+          messagingSenderId: "680406397835",
+          appId: "1:680406397835:web:f701d8bf8678ecfc04f58e"
         };
 
         let db, radioStateRef;
@@ -255,7 +255,6 @@
             document.getElementById('listener-count').textContent = "1";
         }
 
-        // Magyar és angol zenék listája
         const tracks = [
             { type: 'yt', name: '🇭🇺 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc' },
             { type: 'yt', name: '🇭🇺 Tankcsapda - Mennyország tourist', id: '270yvW1_l-E' },
@@ -277,7 +276,6 @@
         ];
 
         let ytPlayer = null;
-        let audioPlayer = new Audio();
         let currentTrackIndex = 0;
         let isPlaying = false;
         let isMuted = false;
@@ -286,7 +284,6 @@
         let isSeeking = false;
         let progressInterval = null;
         let isInitialized = false;
-        let remoteSyncInterval = null;
 
         const playlistTitle = document.getElementById('playlist-title');
         const statusText = document.getElementById('status-text');
@@ -311,20 +308,13 @@
                     const state = snapshot.val();
                     if (state) {
                         syncWithServerState(state);
-                    } else if (isMasterClient()) {
+                    } else {
                         pickAndBroadcastNewTrack();
                     }
                 });
             } else {
                 updateTrackDisplay(0);
             }
-        }
-
-        setTimeout(initApp, 1500);
-
-        function isMasterClient() {
-            // Véletlenszerűen kijelölünk egy klienst masternek, ha még nincs aktív dal
-            return true;
         }
 
         function pickAndBroadcastNewTrack() {
@@ -341,19 +331,16 @@
         function syncWithServerState(state) {
             currentTrackIndex = state.trackIndex;
             if (currentTrackIndex >= tracks.length) currentTrackIndex = 0;
-            
             updateTrackDisplay(currentTrackIndex);
 
             const track = tracks[currentTrackIndex];
             const elapsedSec = (Date.now() - state.startTime) / 1000;
 
-            if (isPlaying) {
-                if (track.type === 'yt' && ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
-                    ytPlayer.loadVideoById({videoId: track.id, startSeconds: elapsedSec});
-                    ytPlayer.setPlaybackRate(currentSpeed);
-                    ytPlayer.setVolume(volumeSlider.value);
-                    ytPlayer.playVideo();
-                }
+            if (isPlaying && ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+                ytPlayer.loadVideoById({videoId: track.id, startSeconds: elapsedSec});
+                ytPlayer.setPlaybackRate(currentSpeed);
+                ytPlayer.setVolume(volumeSlider.value);
+                ytPlayer.playVideo();
             }
         }
 
@@ -383,13 +370,6 @@
             seekSlider.value = 0;
             currentTimeEl.textContent = "00:00";
             durationTimeEl.textContent = "00:00";
-        }
-
-        function formatTime(seconds) {
-            if (isNaN(seconds) || seconds === Infinity) return "00:00";
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
         function playClickSound() {
@@ -459,7 +439,6 @@
                 updateUIState(false);
                 stopProgressUpdate();
             } else if (event.data === YT.PlayerState.ENDED) {
-                // Ha véget ért a zene, az elsőként lejáró kliens sorsol újat a szerverre, így mindenki ugyanarra vált
                 if (radioStateRef) {
                     pickAndBroadcastNewTrack();
                 }
@@ -480,14 +459,12 @@
                 btnIcon.className = 'fa-solid fa-square';
                 btnText.textContent = 'LEÁLLÍTÁS';
                 statusText.innerHTML = `<span class="text-green-400">K3D RÁDIÓ SZÓL</span>`;
-                equalizer.classList.add('playing');
             } else {
                 mainToggleBtn.classList.remove('btn-mc-stop');
                 mainToggleBtn.classList.add('btn-mc-play');
                 btnIcon.className = 'fa-solid fa-play';
                 btnText.textContent = 'LEJÁTSZÁS';
                 statusText.innerHTML = `<span class="text-yellow-400">Megállítva</span>`;
-                equalizer.classList.remove('playing');
             }
         }
 
@@ -502,20 +479,24 @@
 
         function updateProgress() {
             if (isSeeking) return;
-
             let current = 0;
             let duration = 0;
-
             if (ytPlayer && ytPlayer.getCurrentTime) {
                 current = ytPlayer.getCurrentTime() || 0;
                 duration = ytPlayer.getDuration() || 0;
             }
-
             if (duration > 0 && isFinite(duration)) {
                 seekSlider.value = (current / duration) * 100;
                 currentTimeEl.textContent = formatTime(current);
                 durationTimeEl.textContent = formatTime(duration);
             }
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds) || seconds === Infinity) return "00:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
         seekSlider.addEventListener('mousedown', () => isSeeking = true);
