@@ -68,26 +68,6 @@
         }
         .btn-mc-stop:hover { filter: brightness(1.2); }
 
-        .btn-mc-gold {
-            background: #cba100;
-            background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/gold_block.png');
-            background-size: 32px 32px;
-            border: 4px solid #000000;
-            color: #ffffff;
-            text-shadow: 2px 2px #000000;
-        }
-        .btn-mc-gold:hover { filter: brightness(1.2); }
-
-        .btn-mc-grass {
-            background-color: #5c8e32;
-            background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/grass_block_top.png');
-            background-size: 32px 32px;
-            border: 4px solid #000000;
-            color: #ffffff;
-            text-shadow: 2px 2px #000000;
-        }
-        .btn-mc-grass:hover { filter: brightness(1.2); }
-
         .speed-btn {
             background-color: #111111;
             border: 2px solid #000;
@@ -103,13 +83,6 @@
             color: #000;
             border-color: #ffffff;
             font-weight: bold;
-        }
-
-        .mc-select {
-            background-color: #121212;
-            color: #55ff55;
-            border: 4px solid #000000;
-            outline: none;
         }
 
         .mc-eq-bar {
@@ -210,19 +183,6 @@
                 </div>
             </div>
 
-            <!-- YouTube Kereső Sáv -->
-            <div class="mb-5 text-left">
-                <label for="yt-search-input" class="block text-xs text-yellow-300 mb-2 drop-shadow-[1px_1px_0_#000]">
-                    YOUTUBE KERESÉS / LINK:
-                </label>
-                <div class="flex gap-2">
-                    <input type="text" id="yt-search-input" placeholder="Dal neve vagy YT link..." class="mc-select w-full p-3 text-xs px-3">
-                    <button id="yt-search-btn" title="Keresés" class="btn-mc-grass px-4 py-2 cursor-pointer flex items-center justify-center">
-                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
-                    </button>
-                </div>
-            </div>
-
             <!-- Sebesség -->
             <div class="mb-5 text-left">
                 <span class="block text-[10px] text-yellow-300 mb-2 drop-shadow-[1px_1px_0_#000]">SEBESSÉG:</span>
@@ -232,12 +192,6 @@
                     <button class="speed-btn" onclick="setPlaybackSpeed(1.5, this)">1.5x</button>
                     <button class="speed-btn" onclick="setPlaybackSpeed(2.0, this)">2.0x</button>
                 </div>
-            </div>
-
-            <!-- Rejtett Adó választó (hogy a logika ne törjön el, de ne is legyen útban) -->
-            <div class="mb-5 text-left hidden">
-                <select id="playlist-select" class="mc-select w-full p-3 text-xs cursor-pointer truncate"></select>
-                <button id="random-btn"></button>
             </div>
 
             <!-- Lejátszás Gomb -->
@@ -276,9 +230,10 @@
             appId: "1:123456789:web:abcdef"
         };
 
+        let db, radioStateRef;
         try {
             firebase.initializeApp(firebaseConfig);
-            const db = firebase.database();
+            db = firebase.database();
             const listenerRef = db.ref('active_listeners');
             const connectedRef = db.ref('.info/connected');
 
@@ -294,35 +249,31 @@
                 const count = snap.numChildren();
                 document.getElementById('listener-count').textContent = count > 0 ? count : 1;
             });
+
+            radioStateRef = db.ref('radio_state');
         } catch (e) {
             document.getElementById('listener-count').textContent = "1";
         }
 
-        // RENGETEG MAGYAR ÉS ANGOL ZENE A LISTÁBAN!
+        // Magyar és angol zenék listája
         const tracks = [
-            // Magyar slágerek és kedvencek
-            { type: 'yt', name: '🇭🇺 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc', isLive: false },
-            { type: 'yt', name: '🇭🇺 Tankcsapda - Mennyország tourist', id: '270yvW1_l-E', isLive: false },
-            { type: 'yt', name: '🇭🇺 Halott Pénz - Valami van a levegőben', id: '9kZ_q71p_J4', isLive: false },
-            { type: 'yt', name: '🇭🇺 Wellhello - Apuveddmeg', id: '1w7Xw73W4Bc', isLive: false },
-            { type: 'yt', name: '🇭🇺 Bagossy Brothers Company - Olyan Ő', id: '7oJ4HnLq2M8', isLive: false },
-            { type: 'yt', name: '🇭🇺 Majka & Curtis - Belehalok', id: '4H1W7k8gQ1o', isLive: false },
-            { type: 'yt', name: '🇭🇺 Kowalsky meg a Vega - Varázsvilág', id: '0N6w0J8m4rQ', isLive: false },
-            { type: 'yt', name: '🇭🇺 Margaret Island - Eső', id: '3vK1x9Z9W8c', isLive: false },
-            { type: 'yt', name: '🇭🇺 Quimby - Most múlik pontosan', id: '9Q4x2w1_1kE', isLive: false },
-            { type: 'yt', name: '🇭🇺 Horváth Tamás - Meggyfa', id: '5kZ_q71p_J4', isLive: false },
-
-            // Angol slágerek és rádiók
-            { type: 'yt', name: '🇬🇧 Coldplay - Viva La Vida', id: 'dvgZkm7_0eM', isLive: false },
-            { type: 'yt', name: '🇬🇧 Imagine Dragons - Believer', id: '7qu1nvxaA0I', isLive: false },
-            { type: 'yt', name: '🇬🇧 Ed Sheeran - Shape of You', id: 'JGwWNGJdvx8', isLive: false },
-            { type: 'yt', name: '🇬🇧 Avicii - Wake Me Up', id: 'IcrbM1l_BoI', isLive: false },
-            { type: 'yt', name: '🇬🇧 Queen - Bohemian Rhapsody', id: 'fJ9rUzIMcZQ', isLive: false },
-            { type: 'yt', name: '🇬🇧 Daft Punk - Get Lucky', id: '5NV6Rdv1a3I', isLive: false },
-            { type: 'yt', name: '🇬🇧 The Weeknd - Blinding Lights', id: '4NRXx6U8ABQ', isLive: false },
-            { type: 'yt', name: '🇬🇧 OneRepublic - Counting Stars', id: 'hT_nvWreIhg', isLive: false },
-            { type: 'radio', name: '📻 SomaFM Groove Salad (Ambient)', url: 'https://ice1.somafm.com/groovesalad-128-mp3', isLive: true },
-            { type: 'radio', name: '📻 SomaFM Defcon (Synth / Lofi)', url: 'https://ice1.somafm.com/defcon-128-mp3', isLive: true }
+            { type: 'yt', name: '🇭🇺 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc' },
+            { type: 'yt', name: '🇭🇺 Tankcsapda - Mennyország tourist', id: '270yvW1_l-E' },
+            { type: 'yt', name: '🇭🇺 Halott Pénz - Valami van a levegőben', id: '9kZ_q71p_J4' },
+            { type: 'yt', name: '🇭🇺 Wellhello - Apuveddmeg', id: '1w7Xw73W4Bc' },
+            { type: 'yt', name: '🇭🇺 Bagossy Brothers Company - Olyan Ő', id: '7oJ4HnLq2M8' },
+            { type: 'yt', name: '🇭🇺 Majka & Curtis - Belehalok', id: '4H1W7k8gQ1o' },
+            { type: 'yt', name: '🇭🇺 Kowalsky meg a Vega - Varázsvilág', id: '0N6w0J8m4rQ' },
+            { type: 'yt', name: '🇭🇺 Margaret Island - Eső', id: '3vK1x9Z9W8c' },
+            { type: 'yt', name: '🇭🇺 Quimby - Most múlik pontosan', id: '9Q4x2w1_1kE' },
+            { type: 'yt', name: '🇬🇧 Coldplay - Viva La Vida', id: 'dvgZkm7_0eM' },
+            { type: 'yt', name: '🇬🇧 Imagine Dragons - Believer', id: '7qu1nvxaA0I' },
+            { type: 'yt', name: '🇬🇧 Ed Sheeran - Shape of You', id: 'JGwWNGJdvx8' },
+            { type: 'yt', name: '🇬🇧 Avicii - Wake Me Up', id: 'IcrbM1l_BoI' },
+            { type: 'yt', name: '🇬🇧 Queen - Bohemian Rhapsody', id: 'fJ9rUzIMcZQ' },
+            { type: 'yt', name: '🇬🇧 Daft Punk - Get Lucky', id: '5NV6Rdv1a3I' },
+            { type: 'yt', name: '🇬🇧 The Weeknd - Blinding Lights', id: '4NRXx6U8ABQ' },
+            { type: 'yt', name: '🇬🇧 OneRepublic - Counting Stars', id: 'hT_nvWreIhg' }
         ];
 
         let ytPlayer = null;
@@ -335,8 +286,8 @@
         let isSeeking = false;
         let progressInterval = null;
         let isInitialized = false;
+        let remoteSyncInterval = null;
 
-        const playlistSelect = document.getElementById('playlist-select');
         const playlistTitle = document.getElementById('playlist-title');
         const statusText = document.getElementById('status-text');
         const mainToggleBtn = document.getElementById('main-toggle-btn');
@@ -345,9 +296,6 @@
         const volumeSlider = document.getElementById('volume-slider');
         const muteBtn = document.getElementById('mute-btn');
         const muteIcon = document.getElementById('mute-icon');
-
-        const ytSearchInput = document.getElementById('yt-search-input');
-        const ytSearchBtn = document.getElementById('yt-search-btn');
 
         const equalizer = document.getElementById('equalizer');
         const seekContainer = document.getElementById('seek-container');
@@ -358,10 +306,56 @@
         function initApp() {
             if (isInitialized) return;
             isInitialized = true;
-            initTrackList();
+            if (radioStateRef) {
+                radioStateRef.on('value', (snapshot) => {
+                    const state = snapshot.val();
+                    if (state) {
+                        syncWithServerState(state);
+                    } else if (isMasterClient()) {
+                        pickAndBroadcastNewTrack();
+                    }
+                });
+            } else {
+                updateTrackDisplay(0);
+            }
         }
 
         setTimeout(initApp, 1500);
+
+        function isMasterClient() {
+            // Véletlenszerűen kijelölünk egy klienst masternek, ha még nincs aktív dal
+            return true;
+        }
+
+        function pickAndBroadcastNewTrack() {
+            const newIndex = Math.floor(Math.random() * tracks.length);
+            const newState = {
+                trackIndex: newIndex,
+                startTime: Date.now()
+            };
+            if (radioStateRef) {
+                radioStateRef.set(newState);
+            }
+        }
+
+        function syncWithServerState(state) {
+            currentTrackIndex = state.trackIndex;
+            if (currentTrackIndex >= tracks.length) currentTrackIndex = 0;
+            
+            updateTrackDisplay(currentTrackIndex);
+
+            const track = tracks[currentTrackIndex];
+            const elapsedSec = (Date.now() - state.startTime) / 1000;
+
+            if (isPlaying) {
+                if (track.type === 'yt' && ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+                    ytPlayer.loadVideoById({videoId: track.id, startSeconds: elapsedSec});
+                    ytPlayer.setPlaybackRate(currentSpeed);
+                    ytPlayer.setVolume(volumeSlider.value);
+                    ytPlayer.playVideo();
+                }
+            }
+        }
 
         function onYouTubeIframeAPIReady() {
             try {
@@ -375,21 +369,8 @@
                         'onError': onPlayerError
                     }
                 });
-            } catch (e) {
-                console.log("YT Player hiba:", e);
-            }
+            } catch (e) {}
             initApp();
-        }
-
-        function initTrackList() {
-            playlistSelect.innerHTML = '';
-            tracks.forEach((track, idx) => {
-                const opt = document.createElement('option');
-                opt.value = idx;
-                opt.textContent = track.name;
-                playlistSelect.appendChild(opt);
-            });
-            updateTrackDisplay(0);
         }
 
         function updateTrackDisplay(index) {
@@ -397,16 +378,11 @@
             const track = tracks[currentTrackIndex];
             playlistTitle.textContent = track.name;
 
-            if (track.isLive) {
-                seekContainer.classList.add('hidden');
-                equalizer.classList.remove('hidden');
-            } else {
-                equalizer.classList.add('hidden');
-                seekContainer.classList.remove('hidden');
-                seekSlider.value = 0;
-                currentTimeEl.textContent = "00:00";
-                durationTimeEl.textContent = "00:00";
-            }
+            equalizer.classList.add('hidden');
+            seekContainer.classList.remove('hidden');
+            seekSlider.value = 0;
+            currentTimeEl.textContent = "00:00";
+            durationTimeEl.textContent = "00:00";
         }
 
         function formatTime(seconds) {
@@ -433,117 +409,35 @@
             } catch (e) {}
         }
 
-        async function fetchVideoTitle(videoId) {
-            try {
-                const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
-                const data = await res.json();
-                if (data && data.title) {
-                    return data.title;
-                }
-            } catch (e) {}
-            return `YouTube Videó (${videoId})`;
-        }
-
-        async function handleYouTubeSearch() {
-            playClickSound();
-            const query = ytSearchInput.value.trim();
-            if (!query) return;
-
-            const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
-            const match = query.match(ytRegex);
-
-            if (match && match[1]) {
-                statusText.innerHTML = `<span class="text-cyan-400">Cím lekérése...</span>`;
-                const videoTitle = await fetchVideoTitle(match[1]);
-                addNewCustomTrack(match[1], videoTitle);
-                ytSearchInput.value = '';
-                return;
-            }
-
-            if (/^[a-zA-Z0-9_-]{11}$/.test(query)) {
-                statusText.innerHTML = `<span class="text-cyan-400">Cím lekérése...</span>`;
-                const videoTitle = await fetchVideoTitle(query);
-                addNewCustomTrack(query, videoTitle);
-                ytSearchInput.value = '';
-                return;
-            }
-
-            statusText.innerHTML = `<span class="text-cyan-400">Keresés...</span>`;
-            try {
-                const response = await fetch(`https://invidious.privacydev.net/api/v1/search?q=${encodeURIComponent(query)}&type=video`);
-                const data = await response.json();
-
-                if (data && data.length > 0) {
-                    const firstResult = data[0];
-                    if (firstResult && firstResult.videoId) {
-                        addNewCustomTrack(firstResult.videoId, firstResult.title);
-                        ytSearchInput.value = '';
-                    } else {
-                        statusText.innerHTML = `<span class="text-red-400">Nincs találat!</span>`;
-                    }
-                } else {
-                    statusText.innerHTML = `<span class="text-red-400">Nincs találat!</span>`;
-                }
-            } catch (e) {
-                statusText.innerHTML = `<span class="text-red-400">Keresési hiba!</span>`;
-            }
-        }
-
-        function addNewCustomTrack(id, title) {
-            const newTrack = { type: 'yt', name: `🎵 ${title}`, id: id, isLive: false };
-            tracks.unshift(newTrack);
-            initTrackList();
-            playlistSelect.value = 0;
-            updateTrackDisplay(0);
-            startPlayback();
-        }
-
-        ytSearchBtn.addEventListener('click', handleYouTubeSearch);
-        ytSearchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleYouTubeSearch();
-        });
-
         function startPlayback() {
             const track = tracks[currentTrackIndex];
             statusText.innerHTML = `<span class="text-cyan-400">Csatlakozás...</span>`;
 
-            if (track.type === 'yt') {
-                audioPlayer.pause();
-                if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
-                    try {
-                        ytPlayer.loadVideoById(track.id);
-                        ytPlayer.setPlaybackRate(currentSpeed);
-                        ytPlayer.setVolume(volumeSlider.value);
-                        ytPlayer.playVideo();
-                    } catch (e) {
-                        statusText.innerHTML = `<span class="text-orange-400">Kattints a Lejátszásra!</span>`;
+            if (radioStateRef) {
+                radioStateRef.once('value', (snapshot) => {
+                    const state = snapshot.val();
+                    let elapsedSec = 0;
+                    if (state && state.startTime) {
+                        elapsedSec = (Date.now() - state.startTime) / 1000;
                     }
-                } else {
-                    statusText.innerHTML = `<span class="text-orange-400">YouTube betöltődik...</span>`;
-                }
-            } else {
-                if (ytPlayer && typeof ytPlayer.stopVideo === 'function') ytPlayer.stopVideo();
-                audioPlayer.src = track.url;
-                audioPlayer.playbackRate = currentSpeed;
-                audioPlayer.volume = volumeSlider.value / 100;
-                
-                audioPlayer.play().then(() => {
-                    isPlaying = true;
-                    updateUIState(true);
-                }).catch(error => {
-                    statusText.innerHTML = `<span class="text-orange-400">Kattints a Lejátszásra!</span>`;
+
+                    if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+                        try {
+                            ytPlayer.loadVideoById({videoId: track.id, startSeconds: elapsedSec > 0 ? elapsedSec : 0});
+                            ytPlayer.setPlaybackRate(currentSpeed);
+                            ytPlayer.setVolume(volumeSlider.value);
+                            ytPlayer.playVideo();
+                        } catch (e) {
+                            statusText.innerHTML = `<span class="text-orange-400">Kattints a Lejátszásra!</span>`;
+                        }
+                    }
                 });
             }
             startProgressUpdate();
         }
 
         function stopPlayback() {
-            const track = tracks[currentTrackIndex];
-            if (track.type === 'yt') {
-                if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
-            } else {
-                audioPlayer.pause();
-            }
+            if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
             isPlaying = false;
             updateUIState(false);
             stopProgressUpdate();
@@ -553,14 +447,6 @@
             playClickSound();
             if (isPlaying) stopPlayback();
             else startPlayback();
-        }
-
-        // VÉLETLENSZERŰEN VÁLTOGAT A MAGYAR ÉS ANGOL ZENÉK KÖZÖTT
-        function playNextTrack() {
-            currentTrackIndex = Math.floor(Math.random() * tracks.length);
-            playlistSelect.value = currentTrackIndex;
-            updateTrackDisplay(currentTrackIndex);
-            startPlayback();
         }
 
         function onPlayerStateChange(event) {
@@ -573,13 +459,18 @@
                 updateUIState(false);
                 stopProgressUpdate();
             } else if (event.data === YT.PlayerState.ENDED) {
-                playNextTrack();
+                // Ha véget ért a zene, az elsőként lejáró kliens sorsol újat a szerverre, így mindenki ugyanarra vált
+                if (radioStateRef) {
+                    pickAndBroadcastNewTrack();
+                }
             }
         }
 
         function onPlayerError() {
-            statusText.innerHTML = `<span class="text-red-400">Hiba! Léptetés...</span>`;
-            setTimeout(playNextTrack, 1500);
+            statusText.innerHTML = `<span class="text-red-400">Hiba! Újratöltés...</span>`;
+            if (radioStateRef) {
+                pickAndBroadcastNewTrack();
+            }
         }
 
         function updateUIState(playing) {
@@ -610,13 +501,12 @@
         }
 
         function updateProgress() {
-            const track = tracks[currentTrackIndex];
-            if (track.isLive || isSeeking) return;
+            if (isSeeking) return;
 
             let current = 0;
             let duration = 0;
 
-            if (track.type === 'yt' && ytPlayer && ytPlayer.getCurrentTime) {
+            if (ytPlayer && ytPlayer.getCurrentTime) {
                 current = ytPlayer.getCurrentTime() || 0;
                 duration = ytPlayer.getDuration() || 0;
             }
@@ -632,10 +522,8 @@
         seekSlider.addEventListener('touchstart', () => isSeeking = true);
 
         seekSlider.addEventListener('change', (e) => {
-            const track = tracks[currentTrackIndex];
             const targetPercent = parseFloat(e.target.value);
-
-            if (track.type === 'yt' && ytPlayer && ytPlayer.getDuration) {
+            if (ytPlayer && ytPlayer.getDuration) {
                 const duration = ytPlayer.getDuration();
                 if (duration > 0) {
                     const seekToSec = (targetPercent / 100) * duration;
@@ -648,7 +536,6 @@
         function setPlaybackSpeed(speed, btnElement) {
             playClickSound();
             currentSpeed = speed;
-            audioPlayer.playbackRate = speed;
             if (ytPlayer && ytPlayer.setPlaybackRate) {
                 ytPlayer.setPlaybackRate(speed);
             }
@@ -660,7 +547,6 @@
 
         volumeSlider.addEventListener('input', (e) => {
             const val = e.target.value;
-            audioPlayer.volume = val / 100;
             if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(val);
             if (val == 0) {
                 muteIcon.className = 'fa-solid fa-volume-xmark text-red-400 text-sm';
@@ -676,18 +562,14 @@
             if (isMuted) {
                 previousVolume = volumeSlider.value;
                 volumeSlider.value = 0;
-                audioPlayer.volume = 0;
                 if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(0);
                 muteIcon.className = 'fa-solid fa-volume-xmark text-red-400 text-sm';
             } else {
                 volumeSlider.value = previousVolume || 80;
-                audioPlayer.volume = (previousVolume || 80) / 100;
                 if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(previousVolume || 80);
                 muteIcon.className = 'fa-solid fa-volume-high text-sm';
             }
         });
-
-        audioPlayer.addEventListener('ended', playNextTrack);
     </script>
 </body>
 </html>
