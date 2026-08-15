@@ -92,7 +92,7 @@
             height: 10px;
         }
 
-        /* Zöld téglalap alakú csúszka fülek (stílus visszaállítva) */
+        /* Zöld téglalap alakú csúszka fül */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             height: 22px;
@@ -145,19 +145,14 @@
                 <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3">
                     Készenlétben
                 </div>
-                <div id="status-text" class="text-[10px] text-gray-300 flex items-center justify-center gap-2 mb-4">
-                    <span class="text-yellow-400">■</span>
-                    <span>Kattints a lejátszásra!</span>
-                </div>
-
-                <!-- Tekerő csúszka (Letiltva, zöld téglalap füllel) -->
-                <div id="seek-container" class="bg-[#111111] p-3 border-2 border-black">
-                    <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" disabled class="w-full mb-2 opacity-95 cursor-not-allowed">
-                    <div class="flex justify-between text-[9px] text-gray-300 items-center">
-                        <span class="text-red-500 font-bold flex items-center gap-1">
-                            <span class="live-dot">●</span> ÉLŐ
-                        </span>
-                        <span id="current-time">00:00</span>
+                
+                <!-- Élő Rádió kijelzés -->
+                <div id="seek-container" class="bg-[#111111] p-3 border-2 border-black flex justify-between items-center mb-4">
+                    <div class="text-[10px] text-red-500 font-bold flex items-center gap-1">
+                        <span class="live-dot">●</span> ÉLŐ RÁDIÓ
+                    </div>
+                    <div id="current-time" class="text-[10px] text-gray-300">
+                        00:00
                     </div>
                 </div>
             </div>
@@ -195,23 +190,22 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // Többségében magyar zenék, kevesebb angollal
         const hungarianTracks = [
-            { name: '🇭🇺 C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc' },
-            { name: '🇭🇺 Tankcsapda - Mennyország tourist', id: '270yvW1_l-E' },
-            { name: '🇭🇺 Halott Pénz - Valami van a levegőben', id: '9kZ_q71p_J4' },
-            { name: '🇭🇺 Wellhello - Apuveddmeg', id: '1w7Xw73W4Bc' },
-            { name: '🇭🇺 Bagossy Brothers Company - Olyan Ő', id: '7oJ4HnLq2M8' },
-            { name: '🇭🇺 Majka & Curtis - Belehalok', id: '4H1W7k8gQ1o' },
-            { name: '🇭🇺 Kowalsky meg a Vega - Varázsvilág', id: '0N6w0J8m4rQ' },
-            { name: '🇭🇺 Margaret Island - Eső', id: '3vK1x9Z9W8c' },
-            { name: '🇭🇺 Quimby - Most múlik pontosan', id: '9Q4x2w1_1kE' }
+            { name: 'C418 - Sweden (Minecraft OST)', id: 'aBkTkxKDduc' },
+            { name: 'Tankcsapda - Mennyország tourist', id: '270yvW1_l-E' },
+            { name: 'Halott Pénz - Valami van a levegőben', id: '9kZ_q71p_J4' },
+            { name: 'Wellhello - Apuveddmeg', id: '1w7Xw73W4Bc' },
+            { name: 'Bagossy Brothers Company - Olyan Ő', id: '7oJ4HnLq2M8' },
+            { name: 'Majka & Curtis - Belehalok', id: '4H1W7k8gQ1o' },
+            { name: 'Kowalsky meg a Vega - Varázsvilág', id: '0N6w0J8m4rQ' },
+            { name: 'Margaret Island - Eső', id: '3vK1x9Z9W8c' },
+            { name: 'Quimby - Most múlik pontosan', id: '9Q4x2w1_1kE' }
         ];
 
         const englishTracks = [
-            { name: '🇬🇧 Imagine Dragons - Believer', id: '7qu1nvxaA0I' },
-            { name: '🇬🇧 Ed Sheeran - Shape of You', id: 'JGwWNGJdvx8' },
-            { name: '🇬🇧 Avicii - Wake Me Up', id: 'IcrbM1l_BoI' }
+            { name: 'Imagine Dragons - Believer', id: '7qu1nvxaA0I' },
+            { name: 'Ed Sheeran - Shape of You', id: 'JGwWNGJdvx8' },
+            { name: 'Avicii - Wake Me Up', id: 'IcrbM1l_BoI' }
         ];
 
         let ytPlayer = null;
@@ -222,20 +216,15 @@
         let currentSpeed = 1.0;
         let previousVolume = 80;
         let progressInterval = null;
-
-        // Számláló: 3 magyar után jön 1 angol
         let hungarianCounter = 0;
 
         const playlistTitle = document.getElementById('playlist-title');
-        const statusText = document.getElementById('status-text');
         const mainToggleBtn = document.getElementById('main-toggle-btn');
         const btnIcon = document.getElementById('btn-icon');
         const btnText = document.getElementById('btn-text');
         const volumeSlider = document.getElementById('volume-slider');
         const muteBtn = document.getElementById('mute-btn');
         const muteIcon = document.getElementById('mute-icon');
-
-        const seekSlider = document.getElementById('seek-slider');
         const currentTimeEl = document.getElementById('current-time');
 
         function onYouTubeIframeAPIReady() {
@@ -245,10 +234,7 @@
                     width: '200',
                     videoId: hungarianTracks[0].id,
                     playerVars: { 'autoplay': 0, 'controls': 0 },
-                    events: {
-                        'onStateChange': onPlayerStateChange,
-                        'onError': onPlayerError
-                    }
+                    events: { 'onStateChange': onPlayerStateChange, 'onError': onPlayerError }
                 });
             } catch (e) {}
         }
@@ -272,23 +258,16 @@
 
         function getWeightedTrack() {
             if (hungarianCounter < 3) {
-                // Magyar szám sorsolása
                 hungarianCounter++;
-                const index = Math.floor(Math.random() * hungarianTracks.length);
-                return hungarianTracks[index];
+                return hungarianTracks[Math.floor(Math.random() * hungarianTracks.length)];
             } else {
-                // Angol szám sorsolása, majd számláló reset
                 hungarianCounter = 0;
-                const index = Math.floor(Math.random() * englishTracks.length);
-                return englishTracks[index];
+                return englishTracks[Math.floor(Math.random() * englishTracks.length)];
             }
         }
 
         function startPlayback() {
-            if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') {
-                statusText.innerHTML = `<span class="text-yellow-400">Töltődik a YouTube...</span>`;
-                return;
-            }
+            if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') return;
 
             if (isPaused) {
                 ytPlayer.playVideo();
@@ -304,26 +283,20 @@
 
             isPlaying = true;
             updateUIState(true);
-            startProgressUpdate();
+            startTimer();
         }
 
         function stopPlayback() {
-            if (ytPlayer && ytPlayer.pauseVideo) {
-                ytPlayer.pauseVideo();
-            }
+            if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
             isPlaying = false;
             isPaused = true;
             updateUIState(false);
-            stopProgressUpdate();
+            stopTimer();
         }
 
         function togglePlayback() {
             playClickSound();
-            if (isPlaying) {
-                stopPlayback();
-            } else {
-                startPlayback();
-            }
+            isPlaying ? stopPlayback() : startPlayback();
         }
 
         function onPlayerStateChange(event) {
@@ -334,62 +307,44 @@
         }
 
         function onPlayerError() {
-            statusText.innerHTML = `<span class="text-red-400">Hiba, új szám sorsolása...</span>`;
             isPaused = false;
             startPlayback();
         }
 
         function updateUIState(playing) {
             if (playing) {
-                mainToggleBtn.classList.remove('btn-mc-play');
-                mainToggleBtn.classList.add('btn-mc-stop');
+                mainToggleBtn.classList.replace('btn-mc-play', 'btn-mc-stop');
                 btnIcon.className = 'fa-solid fa-square';
                 btnText.textContent = 'LEÁLLÍTÁS';
-                statusText.innerHTML = `<span class="text-green-400">K3D RÁDIÓ SZÓL</span>`;
             } else {
-                mainToggleBtn.classList.remove('btn-mc-stop');
-                mainToggleBtn.classList.add('btn-mc-play');
+                mainToggleBtn.classList.replace('btn-mc-stop', 'btn-mc-play');
                 btnIcon.className = 'fa-solid fa-play';
                 btnText.textContent = 'LEJÁTSZÁS';
-                statusText.innerHTML = `<span class="text-yellow-400">Megállítva</span>`;
             }
         }
 
-        function startProgressUpdate() {
-            stopProgressUpdate();
-            progressInterval = setInterval(updateProgress, 500);
+        // Időmérő ami csak másodperceket számol amíg szól
+        let startTime = 0;
+        let timerInterval = null;
+
+        function startTimer() {
+            stopTimer();
+            timerInterval = setInterval(() => {
+                startTime++;
+                const mins = Math.floor(startTime / 60);
+                const secs = startTime % 60;
+                currentTimeEl.textContent = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }, 1000);
         }
 
-        function stopProgressUpdate() {
-            if (progressInterval) clearInterval(progressInterval);
-        }
-
-        function updateProgress() {
-            let current = 0;
-            let duration = 0;
-            if (ytPlayer && ytPlayer.getCurrentTime) {
-                current = ytPlayer.getCurrentTime() || 0;
-                duration = ytPlayer.getDuration() || 0;
-            }
-            if (duration > 0 && isFinite(duration)) {
-                seekSlider.value = (current / duration) * 100;
-                currentTimeEl.textContent = formatTime(current);
-            }
-        }
-
-        function formatTime(seconds) {
-            if (isNaN(seconds) || seconds === Infinity) return "00:00";
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        function stopTimer() {
+            clearInterval(timerInterval);
         }
 
         function setPlaybackSpeed(speed, btnElement) {
             playClickSound();
             currentSpeed = speed;
-            if (ytPlayer && ytPlayer.setPlaybackRate) {
-                ytPlayer.setPlaybackRate(speed);
-            }
+            if (ytPlayer && ytPlayer.setPlaybackRate) ytPlayer.setPlaybackRate(speed);
             document.querySelectorAll('.speed-btn').forEach(btn => btn.classList.remove('active'));
             if (btnElement) btnElement.classList.add('active');
         }
@@ -399,12 +354,7 @@
         volumeSlider.addEventListener('input', (e) => {
             const val = e.target.value;
             if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(val);
-            if (val == 0) {
-                muteIcon.className = 'fa-solid fa-volume-xmark text-red-400 text-sm';
-            } else {
-                muteIcon.className = 'fa-solid fa-volume-high text-sm';
-                isMuted = false;
-            }
+            muteIcon.className = val == 0 ? 'fa-solid fa-volume-xmark text-red-400 text-sm' : 'fa-solid fa-volume-high text-sm';
         });
 
         muteBtn.addEventListener('click', () => {
@@ -416,8 +366,8 @@
                 if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(0);
                 muteIcon.className = 'fa-solid fa-volume-xmark text-red-400 text-sm';
             } else {
-                volumeSlider.value = previousVolume || 80;
-                if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(previousVolume || 80);
+                volumeSlider.value = previousVolume;
+                if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(previousVolume);
                 muteIcon.className = 'fa-solid fa-volume-high text-sm';
             }
         });
