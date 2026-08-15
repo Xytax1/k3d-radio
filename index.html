@@ -45,26 +45,6 @@
             border: 4px solid #000000;
         }
 
-        .btn-mc-play {
-            background: #a80000;
-            background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/redstone_block.png');
-            background-size: 32px 32px;
-            border: 4px solid #000000;
-            color: #ffffff;
-            text-shadow: 2px 2px #000000;
-        }
-        .btn-mc-play:hover { filter: brightness(1.2); }
-
-        .btn-mc-stop {
-            background: #008b8b;
-            background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/diamond_block.png');
-            background-size: 32px 32px;
-            border: 4px solid #000000;
-            color: #ffffff;
-            text-shadow: 2px 2px #000000;
-        }
-        .btn-mc-stop:hover { filter: brightness(1.2); }
-
         input[type=range] {
             -webkit-appearance: none;
             background: #111111;
@@ -119,18 +99,11 @@
             <div class="mc-inner-box p-5 mb-5 text-center">
                 <div class="text-[10px] text-white uppercase mb-2 [text-shadow:_1px_1px_0_#000]">JUKEBOX LEJÁTSZÓ</div>
                 <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3 [text-shadow:_2px_2px_0_#000]">
-                    Készenlétben
+                    Kattints bárhová az indításhoz...
                 </div>
                 <div class="text-[10px] text-red-500 font-bold flex items-center justify-center gap-1 [text-shadow:_1px_1px_0_#000]">
                     <span class="live-dot">●</span> ÉLŐ RÁDIÓ
                 </div>
-            </div>
-
-            <div class="mb-5">
-                <button id="main-toggle-btn" class="btn-mc-play w-full py-4 px-5 cursor-pointer flex items-center justify-center gap-3 text-sm">
-                    <i id="btn-icon" class="fa-solid fa-play"></i>
-                    <span id="btn-text">LEJÁTSZÁS</span>
-                </button>
             </div>
 
             <div class="mc-inner-box p-3.5 flex items-center gap-3">
@@ -146,9 +119,7 @@
 
     <script>
         const tracks = [
-            // ==========================================
-            // 100 DARAB MAGYAR SLÁGER
-            // ==========================================
+            // --- MAGYAR SLÁGEREK (100 db) ---
             { name: 'Wellhello - Apuveddmeg', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
             { name: 'Bagossy Brothers Company - Olyan Ő', url: 'https://www.youtube.com/watch?v=7oJ4HnLq2M8' },
             { name: 'Majka & Curtis - Belehalok', url: 'https://www.youtube.com/watch?v=4H1W7k8gQ1o' },
@@ -249,9 +220,7 @@
             { name: 'Kowalsky meg a Vega - Mint egy jel', url: 'https://www.youtube.com/watch?v=0wVq08o37sw' },
             { name: 'Quimby - Hordalék', url: 'https://www.youtube.com/watch?v=1m8v7y4X8iQ' },
 
-            // ==========================================
-            // 100 DARAB KÜLFÖLDI SLÁGER (Dua Lipa, Pitbull, stb.)
-            // ==========================================
+            // --- KÜLFÖLDI SLÁGEREK (100 db - Dua Lipa, Pitbull, stb.) ---
             { name: 'Dua Lipa - Levitating', url: 'https://www.youtube.com/watch?v=TUVcZfQe-Kw' },
             { name: 'Dua Lipa - Houdini', url: 'https://www.youtube.com/watch?v=isMgyETEMzI' },
             { name: 'Dua Lipa - Training Season', url: 'https://www.youtube.com/watch?v=xS5aJ07i18c' },
@@ -361,15 +330,11 @@
 
         let ytPlayer = null;
         let currentTrack = null;
-        let isPlaying = false;
-        let isPaused = false;
+        let isStarted = false;
         let isMuted = false;
         let previousVolume = 80;
 
         const playlistTitle = document.getElementById('playlist-title');
-        const mainToggleBtn = document.getElementById('main-toggle-btn');
-        const btnIcon = document.getElementById('btn-icon');
-        const btnText = document.getElementById('btn-text');
         const volumeSlider = document.getElementById('volume-slider');
         const muteBtn = document.getElementById('mute-btn');
         const muteIcon = document.getElementById('mute-icon');
@@ -392,8 +357,39 @@
         }
 
         function onPlayerReady(event) {
-            startPlayback();
+            tryAutoStart();
         }
+
+        function tryAutoStart() {
+            if (isStarted || !ytPlayer) return;
+            isStarted = true;
+            currentTrack = tracks[Math.floor(Math.random() * tracks.length)];
+            const videoId = getYouTubeId(currentTrack.url);
+            
+            if (!videoId) {
+                isStarted = false;
+                return;
+            }
+
+            playlistTitle.textContent = currentTrack.name;
+            ytPlayer.loadVideoById(videoId);
+            ytPlayer.setVolume(volumeSlider.value);
+            ytPlayer.playVideo();
+        }
+
+        // Automatikus indítás kísérlet bárhilyen kattintásra vagy érintésre az oldalon
+        ['click', 'touchstart', 'keydown'].forEach(evt => {
+            window.addEventListener(evt, () => {
+                if (!isStarted) {
+                    tryAutoStart();
+                }
+            }, { once: true });
+        });
+
+        // Ha az oldal betöltődik, rögtön próbálkozik a lejátszással is
+        window.addEventListener('load', () => {
+            setTimeout(tryAutoStart, 1000);
+        });
 
         function playClickSound() {
             try {
@@ -412,68 +408,24 @@
             } catch (e) {}
         }
 
-        function startPlayback() {
-            if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') return;
-
-            if (isPaused) {
-                ytPlayer.playVideo();
-                isPaused = false;
-            } else {
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
                 currentTrack = tracks[Math.floor(Math.random() * tracks.length)];
                 const videoId = getYouTubeId(currentTrack.url);
-                
-                if (!videoId) {
-                    startPlayback();
-                    return;
-                }
-
                 playlistTitle.textContent = currentTrack.name;
                 ytPlayer.loadVideoById(videoId);
                 ytPlayer.setVolume(volumeSlider.value);
                 ytPlayer.playVideo();
             }
-
-            isPlaying = true;
-            updateUIState(true);
-        }
-
-        function stopPlayback() {
-            if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
-            isPlaying = false;
-            isPaused = true;
-            updateUIState(false);
-        }
-
-        function togglePlayback() {
-            playClickSound();
-            isPlaying ? stopPlayback() : startPlayback();
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.ENDED) {
-                isPaused = false;
-                startPlayback();
-            }
         }
 
         function onPlayerError(event) {
-            isPaused = false;
-            startPlayback();
+            currentTrack = tracks[Math.floor(Math.random() * tracks.length)];
+            const videoId = getYouTubeId(currentTrack.url);
+            playlistTitle.textContent = currentTrack.name;
+            ytPlayer.loadVideoById(videoId);
+            ytPlayer.playVideo();
         }
-
-        function updateUIState(playing) {
-            if (playing) {
-                mainToggleBtn.classList.replace('btn-mc-play', 'btn-mc-stop');
-                btnIcon.className = 'fa-solid fa-square';
-                btnText.textContent = 'LEÁLLÍTÁS';
-            } else {
-                mainToggleBtn.classList.replace('btn-mc-stop', 'btn-mc-play');
-                btnIcon.className = 'fa-solid fa-play';
-                btnText.textContent = 'LEJÁTSZÁS';
-            }
-        }
-
-        mainToggleBtn.addEventListener('click', togglePlayback);
 
         volumeSlider.addEventListener('input', (e) => {
             const val = e.target.value;
