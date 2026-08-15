@@ -174,11 +174,11 @@
             <div class="mc-inner-box p-5 mb-5 text-center">
                 <div class="text-[10px] text-gray-400 uppercase mb-3">JUKEBOX LEJÁTSZÓ</div>
                 <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3">
-                    Betöltés...
+                    Készenlétben
                 </div>
                 <div id="status-text" class="text-[10px] text-gray-300 flex items-center justify-center gap-2 mb-4">
                     <span class="text-yellow-400">■</span>
-                    <span>Készenlétben</span>
+                    <span>Válassz adót</span>
                 </div>
 
                 <!-- Ekvalizer -->
@@ -264,6 +264,7 @@
         let previousVolume = 80;
         let isSeeking = false;
         let progressInterval = null;
+        let isInitialized = false;
 
         const playlistSelect = document.getElementById('playlist-select');
         const playlistTitle = document.getElementById('playlist-title');
@@ -283,18 +284,32 @@
         const currentTimeEl = document.getElementById('current-time');
         const durationTimeEl = document.getElementById('duration-time');
 
-        function onYouTubeIframeAPIReady() {
-            ytPlayer = new YT.Player('yt-player', {
-                height: '200',
-                width: '200',
-                videoId: tracks[0].id || '',
-                playerVars: { 'autoplay': 0, 'controls': 0 },
-                events: {
-                    'onStateChange': onPlayerStateChange,
-                    'onError': onPlayerError
-                }
-            });
+        // Azonnali inicializálás, hogy ne ragadjon be frissítéskor sem
+        function initApp() {
+            if (isInitialized) return;
+            isInitialized = true;
             initTrackList();
+        }
+
+        // Biztonsági időzítő: ha a YouTube API nem töltődne be 1,5 másodpercen belül, akkor is elindul az oldal
+        setTimeout(initApp, 1500);
+
+        function onYouTubeIframeAPIReady() {
+            try {
+                ytPlayer = new YT.Player('yt-player', {
+                    height: '200',
+                    width: '200',
+                    videoId: tracks[0].id || '',
+                    playerVars: { 'autoplay': 0, 'controls': 0 },
+                    events: {
+                        'onStateChange': onPlayerStateChange,
+                        'onError': onPlayerError
+                    }
+                });
+            } catch (e) {
+                console.log("YT Player hiba:", e);
+            }
+            initApp();
         }
 
         function initTrackList() {
@@ -363,8 +378,10 @@
                         ytPlayer.setVolume(volumeSlider.value);
                         ytPlayer.playVideo();
                     } catch (e) {
-                        console.log("Automatikus lejátszás blokkolva a böngésző által.");
+                        statusText.innerHTML = `<span class="text-orange-400">Kattints a Lejátszásra!</span>`;
                     }
+                } else {
+                    statusText.innerHTML = `<span class="text-orange-400">YouTube betöltődik...</span>`;
                 }
             } else {
                 if (ytPlayer && typeof ytPlayer.stopVideo === 'function') ytPlayer.stopVideo();
@@ -376,7 +393,6 @@
                     isPlaying = true;
                     updateUIState(true);
                 }).catch(error => {
-                    console.log("Interakció szükséges a lejátszáshoz:", error);
                     statusText.innerHTML = `<span class="text-orange-400">Kattints a Lejátszásra!</span>`;
                 });
             }
