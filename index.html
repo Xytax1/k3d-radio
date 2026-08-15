@@ -28,6 +28,7 @@
             background-size: 32px 32px;
             border: 5px solid #000000;
             box-shadow: 8px 8px 0px 0px #000000;
+            cursor: pointer;
         }
 
         .mc-header {
@@ -87,7 +88,7 @@
         <div id="yt-player"></div>
     </div>
 
-    <div class="mc-card w-full max-w-md text-white text-center relative my-4">
+    <div id="main-card" class="mc-card w-full max-w-md text-white text-center relative my-4">
         
         <div class="mc-header py-7 px-6 text-left">
             <h1 class="text-xl sm:text-2xl text-yellow-300 tracking-wider drop-shadow-[3px_3px_0_#000]">
@@ -99,14 +100,14 @@
             <div class="mc-inner-box p-5 mb-5 text-center">
                 <div class="text-[10px] text-white uppercase mb-2 [text-shadow:_1px_1px_0_#000]">JUKEBOX LEJÁTSZÓ</div>
                 <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3 [text-shadow:_2px_2px_0_#000]">
-                    Kattints bárhová az indításhoz...
+                    Kattints ide az indításhoz!
                 </div>
                 <div class="text-[10px] text-red-500 font-bold flex items-center justify-center gap-1 [text-shadow:_1px_1px_0_#000]">
                     <span class="live-dot">●</span> ÉLŐ RÁDIÓ
                 </div>
             </div>
 
-            <div class="mc-inner-box p-3.5 flex items-center gap-3">
+            <div class="mc-inner-box p-3.5 flex items-center gap-3" onclick="event.stopPropagation()">
                 <button id="mute-btn" class="text-gray-300 hover:text-white cursor-pointer w-6 text-center">
                     <i id="mute-icon" class="fa-solid fa-volume-high text-sm"></i>
                 </button>
@@ -220,7 +221,7 @@
             { name: 'Kowalsky meg a Vega - Mint egy jel', url: 'https://www.youtube.com/watch?v=0wVq08o37sw' },
             { name: 'Quimby - Hordalék', url: 'https://www.youtube.com/watch?v=1m8v7y4X8iQ' },
 
-            // --- KÜLFÖLDI SLÁGEREK (100 db - Dua Lipa, Pitbull, stb.) ---
+            // --- KÜLFÖLDI SLÁGEREK (100 db) ---
             { name: 'Dua Lipa - Levitating', url: 'https://www.youtube.com/watch?v=TUVcZfQe-Kw' },
             { name: 'Dua Lipa - Houdini', url: 'https://www.youtube.com/watch?v=isMgyETEMzI' },
             { name: 'Dua Lipa - Training Season', url: 'https://www.youtube.com/watch?v=xS5aJ07i18c' },
@@ -338,6 +339,7 @@
         const volumeSlider = document.getElementById('volume-slider');
         const muteBtn = document.getElementById('mute-btn');
         const muteIcon = document.getElementById('mute-icon');
+        const mainCard = document.getElementById('main-card');
 
         function onYouTubeIframeAPIReady() {
             try {
@@ -348,7 +350,6 @@
                     videoId: firstId,
                     playerVars: { 'autoplay': 1, 'controls': 0, 'enablejsapi': 1 },
                     events: { 
-                        'onReady': onPlayerReady,
                         'onStateChange': onPlayerStateChange, 
                         'onError': onPlayerError 
                     }
@@ -356,11 +357,7 @@
             } catch (e) {}
         }
 
-        function onPlayerReady(event) {
-            tryAutoStart();
-        }
-
-        function tryAutoStart() {
+        function triggerStart() {
             if (isStarted || !ytPlayer) return;
             isStarted = true;
             currentTrack = tracks[Math.floor(Math.random() * tracks.length)];
@@ -377,36 +374,14 @@
             ytPlayer.playVideo();
         }
 
-        // Automatikus indítás kísérlet bárhilyen kattintásra vagy érintésre az oldalon
-        ['click', 'touchstart', 'keydown'].forEach(evt => {
-            window.addEventListener(evt, () => {
-                if (!isStarted) {
-                    tryAutoStart();
-                }
-            }, { once: true });
+        // Bármilyen kattintás az egész oldalon vagy a dobozon elindítja
+        window.addEventListener('click', () => {
+            if (!isStarted) triggerStart();
         });
 
-        // Ha az oldal betöltődik, rögtön próbálkozik a lejátszással is
-        window.addEventListener('load', () => {
-            setTimeout(tryAutoStart, 1000);
+        mainCard.addEventListener('click', () => {
+            if (!isStarted) triggerStart();
         });
-
-        function playClickSound() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(400, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.05);
-                gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.05);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.05);
-            } catch (e) {}
-        }
 
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.ENDED) {
@@ -434,7 +409,6 @@
         });
 
         muteBtn.addEventListener('click', () => {
-            playClickSound();
             isMuted = !isMuted;
             if (isMuted) {
                 previousVolume = volumeSlider.value;
