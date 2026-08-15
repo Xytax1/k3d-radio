@@ -92,7 +92,6 @@
             height: 10px;
         }
 
-        /* Zöld téglalap alakú csúszka fül */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             height: 22px;
@@ -110,15 +109,6 @@
             overflow: hidden;
             opacity: 0;
             pointer-events: none;
-        }
-
-        @keyframes livePulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
-        .live-dot {
-            animation: livePulse 1.5s infinite;
         }
     </style>
 </head>
@@ -142,18 +132,8 @@
         <div class="p-6">
             <div class="mc-inner-box p-5 mb-5 text-center">
                 <div class="text-[10px] text-gray-400 uppercase mb-3">JUKEBOX LEJÁTSZÓ</div>
-                <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3">
+                <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate">
                     Készenlétben
-                </div>
-                
-                <!-- Élő Rádió kijelzés -->
-                <div id="seek-container" class="bg-[#111111] p-3 border-2 border-black flex justify-between items-center mb-4">
-                    <div class="text-[10px] text-red-500 font-bold flex items-center gap-1">
-                        <span class="live-dot">●</span> ÉLŐ RÁDIÓ
-                    </div>
-                    <div id="current-time" class="text-[10px] text-gray-300">
-                        00:00
-                    </div>
                 </div>
             </div>
 
@@ -215,7 +195,6 @@
         let isMuted = false;
         let currentSpeed = 1.0;
         let previousVolume = 80;
-        let progressInterval = null;
         let hungarianCounter = 0;
 
         const playlistTitle = document.getElementById('playlist-title');
@@ -225,7 +204,6 @@
         const volumeSlider = document.getElementById('volume-slider');
         const muteBtn = document.getElementById('mute-btn');
         const muteIcon = document.getElementById('mute-icon');
-        const currentTimeEl = document.getElementById('current-time');
 
         function onYouTubeIframeAPIReady() {
             try {
@@ -283,7 +261,6 @@
 
             isPlaying = true;
             updateUIState(true);
-            startTimer();
         }
 
         function stopPlayback() {
@@ -291,7 +268,6 @@
             isPlaying = false;
             isPaused = true;
             updateUIState(false);
-            stopTimer();
         }
 
         function togglePlayback() {
@@ -321,24 +297,6 @@
                 btnIcon.className = 'fa-solid fa-play';
                 btnText.textContent = 'LEJÁTSZÁS';
             }
-        }
-
-        // Időmérő ami csak másodperceket számol amíg szól
-        let startTime = 0;
-        let timerInterval = null;
-
-        function startTimer() {
-            stopTimer();
-            timerInterval = setInterval(() => {
-                startTime++;
-                const mins = Math.floor(startTime / 60);
-                const secs = startTime % 60;
-                currentTimeEl.textContent = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            }, 1000);
-        }
-
-        function stopTimer() {
-            clearInterval(timerInterval);
         }
 
         function setPlaybackSpeed(speed, btnElement) {
