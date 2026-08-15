@@ -379,6 +379,20 @@
             } catch (e) {}
         }
 
+        // Segédfüggvény a YouTube videó címének lekérésére link vagy ID alapján
+        async function fetchVideoTitle(videoId) {
+            try {
+                const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
+                const data = await res.json();
+                if (data && data.title) {
+                    return data.title;
+                }
+            } catch (e) {
+                console.log("Cím lekérdezési hiba:", e);
+            }
+            return `YouTube Videó (${videoId})`;
+        }
+
         async function handleYouTubeSearch() {
             playClickSound();
             const query = ytSearchInput.value.trim();
@@ -389,18 +403,22 @@
             const match = query.match(ytRegex);
 
             if (match && match[1]) {
-                addNewCustomTrack(match[1], `YouTube Link (${match[1]})`);
+                statusText.innerHTML = `<span class="text-cyan-400">Cím lekérése...</span>`;
+                const videoTitle = await fetchVideoTitle(match[1]);
+                addNewCustomTrack(match[1], videoTitle);
                 ytSearchInput.value = '';
                 return;
             }
 
             if (/^[a-zA-Z0-9_-]{11}$/.test(query)) {
-                addNewCustomTrack(query, `YouTube Videó (${query})`);
+                statusText.innerHTML = `<span class="text-cyan-400">Cím lekérése...</span>`;
+                const videoTitle = await fetchVideoTitle(query);
+                addNewCustomTrack(query, videoTitle);
                 ytSearchInput.value = '';
                 return;
             }
 
-            // 2. Keresőszó alapú lekérdezés a stabilabb Invidious API-n keresztül
+            // 2. Keresőszó alapú lekérdezés az Invidious API-n keresztül
             statusText.innerHTML = `<span class="text-cyan-400">Keresés...</span>`;
             try {
                 const response = await fetch(`https://invidious.privacydev.net/api/v1/search?q=${encodeURIComponent(query)}&type=video`);
