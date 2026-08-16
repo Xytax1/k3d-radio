@@ -167,7 +167,6 @@
         }
 
         let ytPlayer = null;
-        let isPlaying = false;
         let isPaused = false;
         let isMuted = false;
         let previousVolume = 80;
@@ -182,11 +181,9 @@
 
         function onYouTubeIframeAPIReady() {
             try {
-                const firstId = getYouTubeId(tracks[0].url);
                 ytPlayer = new YT.Player('yt-player', {
                     height: '200',
                     width: '200',
-                    videoId: firstId,
                     playerVars: { 'autoplay': 0, 'controls': 0, 'enablejsapi': 1 },
                     events: { 
                         'onStateChange': onPlayerStateChange, 
@@ -222,54 +219,54 @@
             } else {
                 const track = tracks[Math.floor(Math.random() * tracks.length)];
                 const videoId = getYouTubeId(track.url);
-                
-                if (!videoId) {
-                    startPlayback();
-                    return;
-                }
+                if (!videoId) return;
 
                 playlistTitle.textContent = track.name;
                 ytPlayer.loadVideoById(videoId);
                 ytPlayer.setVolume(volumeSlider.value);
-                ytPlayer.playVideo();
             }
-
-            isPlaying = true;
             updateUIState(true);
         }
 
         function stopPlayback() {
             if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
-            isPlaying = false;
             isPaused = true;
             updateUIState(false);
         }
 
         function togglePlayback() {
             playClickSound();
-            isPlaying ? stopPlayback() : startPlayback();
+            const state = ytPlayer.getPlayerState();
+            
+            // Ha épp játszik (1) vagy pufferel (3)
+            if (state === 1 || state === 3) {
+                stopPlayback();
+            } else {
+                startPlayback();
+            }
         }
 
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.ENDED) {
                 isPaused = false;
                 startPlayback();
+            } else if (event.data === YT.PlayerState.PLAYING) {
+                updateUIState(true);
+            } else if (event.data === YT.PlayerState.PAUSED) {
+                updateUIState(false);
             }
         }
 
         function onPlayerError(event) {
-            isPaused = false;
             startPlayback();
         }
 
         function updateUIState(playing) {
             if (playing) {
-                // Ha épp szól, a gomb legyen LEÁLLÍTÁS stílusú
                 mainToggleBtn.classList.replace('btn-mc-play', 'btn-mc-stop');
                 btnIcon.className = 'fa-solid fa-square';
                 btnText.textContent = 'LEÁLLÍTÁS';
             } else {
-                // Ha áll, a gomb legyen LEJÁTSZÁS stílusú
                 mainToggleBtn.classList.replace('btn-mc-stop', 'btn-mc-play');
                 btnIcon.className = 'fa-solid fa-play';
                 btnText.textContent = 'LEJÁTSZÁS';
