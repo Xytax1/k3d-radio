@@ -84,11 +84,12 @@
 
         #youtube-player-container {
             position: absolute;
-            width: 1px;
-            height: 1px;
+            width: 200px;
+            height: 200px;
             overflow: hidden;
             opacity: 0;
             pointer-events: none;
+            z-index: -999;
         }
 
         @keyframes livePulse {
@@ -119,7 +120,7 @@
             <div class="mc-inner-box p-5 mb-5 text-center">
                 <div class="text-[10px] text-white uppercase mb-2 [text-shadow:_1px_1px_0_#000]">JUKEBOX LEJÁTSZÓ</div>
                 <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3 [text-shadow:_2px_2px_0_#000]">
-                    Készenlétben
+                    Betöltés...
                 </div>
                 <div class="text-[10px] text-red-500 font-bold flex items-center justify-center gap-1 [text-shadow:_1px_1px_0_#000]">
                     <span class="live-dot">●</span> ÉLŐ RÁDIÓ
@@ -127,9 +128,9 @@
             </div>
 
             <div class="mb-5">
-                <button id="main-toggle-btn" class="btn-mc-play w-full py-4 px-5 cursor-pointer flex items-center justify-center gap-3 text-sm">
-                    <i id="btn-icon" class="fa-solid fa-play"></i>
-                    <span id="btn-text">LEJÁTSZÁS</span>
+                <button id="main-toggle-btn" class="btn-mc-play w-full py-4 px-5 cursor-pointer flex items-center justify-center gap-3 text-sm opacity-50 cursor-not-allowed" disabled>
+                    <i id="btn-icon" class="fa-solid fa-spinner fa-spin"></i>
+                    <span id="btn-text">BETÖLTÉS...</span>
                 </button>
             </div>
 
@@ -146,163 +147,163 @@
 
     <script>
         const tracks = [
-            { name: 'Wellhello - Apuveddmeg', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
-            { name: 'Bagossy Brothers Company - Olyan Ő', url: 'https://www.youtube.com/watch?v=7oJ4HnLq2M8' },
-            { name: 'Majka & Curtis - Belehalok', url: 'https://www.youtube.com/watch?v=4H1W7k8gQ1o' },
-            { name: 'Halott Pénz - Valami van a levegőben', url: 'https://www.youtube.com/watch?v=ArTbyFQpQ_8' },
-            { name: 'Follow The Flow - Nem tudja senki', url: 'https://www.youtube.com/watch?v=dMa3-TTGb44' },
-            { name: 'Azahriah x Desh - Pullup', url: 'https://www.youtube.com/watch?v=3V9741s4gfc' },
-            { name: 'T.Danny - Utolsó alkalom', url: 'https://www.youtube.com/watch?v=1G4isv_Fylg' },
-            { name: 'Manuel - Zöld a szemem', url: 'https://www.youtube.com/watch?v=TUVcZfQe-Kw' },
-            { name: 'BSW - Bajnokok', url: 'https://www.youtube.com/watch?v=60ItHLz5WEA' },
-            { name: 'Krúbi - Pesti Srác', url: 'https://www.youtube.com/watch?v=JGwWNGJdvx8' },
-            { name: 'Dzsúdló - Levegő', url: 'https://www.youtube.com/watch?v=09R8_2nJtjg' },
-            { name: 'Kowalsky meg a Vega - Varázsvilág', url: 'https://www.youtube.com/watch?v=0wVq08o37sw' },
-            { name: 'Quimby - Most múlik pontosan', url: 'https://www.youtube.com/watch?v=1m8v7y4X8iQ' },
-            { name: 'AWS - Viszlát nyár', url: 'https://www.youtube.com/watch?v=W12_1G3W56A' },
-            { name: 'Margaret Island - Eső', url: 'https://www.youtube.com/watch?v=3vK1x9Z9W8c' },
-            { name: 'Punnany Massif - Élvezd', url: 'https://www.youtube.com/watch?v=k7G4kffacxf' },
-            { name: 'Rúzsa Magdi - Ég és föld', url: 'https://www.youtube.com/watch?v=4d5e6f7g8h9' },
-            { name: 'Blahalouisana - Itt élni jó', url: 'https://www.youtube.com/watch?v=0j1k2l3m4n5' },
-            { name: 'Intim Torna Illegál - A tenger', url: 'https://www.youtube.com/watch?v=9i0j1k2l3m4' },
-            { name: 'Compact Disco - Sound of Our Hearts', url: 'https://www.youtube.com/watch?v=7g8h9i0j1k2' },
-            { name: 'Parno Graszt - Már nem szédülök', url: 'https://www.youtube.com/watch?v=1b2c3d4e5f6' },
-            { name: 'Bëlga - Nemzeti hip-hop', url: 'https://www.youtube.com/watch?v=8a9b0c1d2e3' },
-            { name: 'Vad Fruttik - Darabok', url: 'https://www.youtube.com/watch?v=8h9i0j1k2l3' },
-            { name: 'Caramel - Szállj', url: 'https://www.youtube.com/watch?v=6f7g8h9i0j1' },
-            { name: 'Pápai Joci - Origo', url: 'https://www.youtube.com/watch?v=7oJ4HnLq2M8' },
-            { name: 'Kies - Nyári eső', url: 'https://www.youtube.com/watch?v=4H1W7k8gQ1o' },
-            { name: 'Fish! - Gyere ki a grundra', url: 'https://www.youtube.com/watch?v=3vK1x9Z9W8c' },
-            { name: 'Honeybeast - A legnagyobb hős', url: 'https://www.youtube.com/watch?v=0N6w0J8m4rQ' },
-            { name: 'Kaukázus - Tartós béke', url: 'https://www.youtube.com/watch?v=W12_1G3W56A' },
-            { name: 'Road - Nem kell más', url: 'https://www.youtube.com/watch?v=7qu1nvxaA0I' },
-            { name: 'Azahriah - Four Moods', url: 'https://www.youtube.com/watch?v=3V9741s4gfc' },
-            { name: 'ValMar - Szίσza', url: 'https://www.youtube.com/watch?v=7qu1nvxaA0I' },
-            { name: 'Tankcsapda - Jön a világ', url: 'https://www.youtube.com/watch?v=BJceRTvD9Fo' },
-            { name: 'Kowalsky meg a Vega - Hogy vagy, kedves?', url: 'https://www.youtube.com/watch?v=0wVq08o37sw' },
-            { name: 'Quimby - Ajándék', url: 'https://www.youtube.com/watch?v=1m8v7y4X8iQ' },
-            { name: 'Rúzsa Magdi - Jel', url: 'https://www.youtube.com/watch?v=4d5e6f7g8h9' },
-            { name: 'Ákos - Új törvény', url: 'https://www.youtube.com/watch?v=5e6f7g8h9i0' },
-            { name: 'Punnany Massif - Hétköznapi Hősök', url: 'https://www.youtube.com/watch?v=k7G4kffacxf' },
-            { name: 'Krúbi - Szív', url: 'https://www.youtube.com/watch?v=JGwWNGJdvx8' },
-            { name: 'Dzsúdló - Köszönöm', url: 'https://www.youtube.com/watch?v=09R8_2nJtjg' },
-            { name: 'Manuel - Barát', url: 'https://www.youtube.com/watch?v=TUVcZfQe-Kw' },
-            { name: 'T.Danny - Magna Cum Laude', url: 'https://www.youtube.com/watch?v=1G4isv_Fylg' },
-            { name: 'Margaret Island - Veled minden', url: 'https://www.youtube.com/watch?v=3vK1x9Z9W8c' },
-            { name: 'Blahalouisana - Nem akarok kikelni az ágyból', url: 'https://www.youtube.com/watch?v=0j1k2l3m4n5' },
-            { name: 'Vad Fruttik - Nekem senkim sincsen', url: 'https://www.youtube.com/watch?v=8h9i0j1k2l3' },
-            { name: 'Caramel - Lélekűrt', url: 'https://www.youtube.com/watch?v=6f7g8h9i0j1' },
-            { name: 'Pápai Joci - Ne nézz így rám', url: 'https://www.youtube.com/watch?v=7oJ4HnLq2M8' },
-            { name: 'Honeybeast - Egoista', url: 'https://www.youtube.com/watch?v=0N6w0J8m4rQ' },
-            { name: 'ByeAlex - Fekete', url: 'https://www.youtube.com/watch?v=9Q4x2w1_1kE' },
-            { name: 'Irie Maffia - Bad Boy', url: 'https://www.youtube.com/watch?v=3c4d5e6f7g8' },
-            { name: 'Bëlga - Kikelet', url: 'https://www.youtube.com/watch?v=8a9b0c1d2e3' },
-            { name: 'Supernem - Szabad vagy', url: 'https://www.youtube.com/watch?v=dMa3-TTGb44' },
-            { name: 'Fish! - Talpaltató', url: 'https://www.youtube.com/watch?v=3vK1x9Z9W8c' },
-            { name: 'Road - Golgota', url: 'https://www.youtube.com/watch?v=7qu1nvxaA0I' },
-            { name: 'Esti Kornél - Föld', url: 'https://www.youtube.com/watch?v=4d5e6f7g8h9' },
-            { name: 'Fran Palermo - Sunshine', url: 'https://www.youtube.com/watch?v=5e6f7g8h9i0' },
-            { name: 'Pogány Induló - Budapest', url: 'https://www.youtube.com/watch?v=9i0j1k2l3m4' },
-            { name: 'Brains - Days', url: 'https://www.youtube.com/watch?v=1G4isv_Fylg' },
-            { name: 'Hősök - De igen', url: 'https://www.youtube.com/watch?v=g0fgtTQY' },
-            { name: 'Compact Disco - Fly', url: 'https://www.youtube.com/watch?v=7g8h9i0j1k2' },
-            { name: 'Parno Graszt - Olah', url: 'https://www.youtube.com/watch?v=1b2c3d4e5f6' },
-            { name: 'Kies - Szürke', url: 'https://www.youtube.com/watch?v=4H1W7k8gQ1o' },
-            { name: 'Heaven Street Seven - Sajnálom', url: 'https://www.youtube.com/watch?v=k7G4kffacxf' },
-            { name: 'Pál Utcai Fiúk - Tűz', url: 'https://www.youtube.com/watch?v=ArTbyFQpQ_8' },
-            { name: 'Kaukázus - Lift', url: 'https://www.youtube.com/watch?v=W12_1G3W56A' },
-            { name: 'Ráday - Rádió', url: 'https://www.youtube.com/watch?v=3c4d5e6f7g8' },
-            { name: 'Sisi - Szabad', url: 'https://www.youtube.com/watch?v=0j1k2l3m4n5' },
-            { name: 'Animal Cannibals - Takarítónő', url: 'https://www.youtube.com/watch?v=1b2c3d4e5f6' },
-            { name: 'Majka - Domino', url: 'https://www.youtube.com/watch?v=4H1W7k8gQ1o' },
-            { name: 'Halott Pénz - Darabokra', url: 'https://www.youtube.com/watch?v=ArTbyFQpQ_8' },
-            { name: 'Wellhello - Késő már', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
-            { name: 'Azahriah - Rét', url: 'https://www.youtube.com/watch?v=3V9741s4gfc' },
-            { name: 'ValMar - Tavasz', url: 'https://www.youtube.com/watch?v=7qu1nvxaA0I' },
-            { name: 'Tankcsapda - Fiúknak', url: 'https://www.youtube.com/watch?v=BJceRTvD9Fo' },
-            { name: 'Kowalsky meg a Vega - Mint egy jel', url: 'https://www.youtube.com/watch?v=0wVq08o37sw' },
-            { name: 'Quimby - Hordalék', url: 'https://www.youtube.com/watch?v=1m8v7y4X8iQ' },
-            { name: 'Dua Lipa - Levitating', url: 'https://www.youtube.com/watch?v=TUVcZfQe-Kw' },
-            { name: 'Dua Lipa - New Rules', url: 'https://www.youtube.com/watch?v=k2qgadSvNyU' },
-            { name: 'Dua Lipa - Don\'t Start Now', url: 'https://www.youtube.com/watch?v=oygrmJFKYZY' },
-            { name: 'Pitbull - Timber ft. Kesha', url: 'https://www.youtube.com/watch?v=hHUbLv4ThOo' },
-            { name: 'Pitbull - Fireball ft. John Ryan', url: 'https://www.youtube.com/watch?v=HMzP_aJg77Q' },
-            { name: 'Pitbull - Give Me Everything ft. Ne-Yo', url: 'https://www.youtube.com/watch?v=EPo5wWmKEaI' },
-            { name: 'Pitbull - Hotel Room Service', url: 'https://www.youtube.com/watch?v=kB5pJv4bLIA' },
-            { name: 'Pitbull - I Know You Want Me', url: 'https://www.youtube.com/watch?v=E_dZzYIU-QQ' },
-            { name: 'Luis Fonsi - Despacito', url: 'https://www.youtube.com/watch?v=kJQP7kiw5Fk' },
-            { name: 'Ed Sheeran - Shape of You', url: 'https://www.youtube.com/watch?v=JGwWNGJdvx8' },
-            { name: 'Wiz Khalifa - See You Again', url: 'https://www.youtube.com/watch?v=RgKAFK5djSk' },
-            { name: 'Mark Ronson - Uptown Funk', url: 'https://www.youtube.com/watch?v=OPf0YbXqDm0' },
-            { name: 'Psy - Gangnam Style', url: 'https://www.youtube.com/watch?v=9bZkp7q19f0' },
-            { name: 'Maroon 5 - Sugar', url: 'https://www.youtube.com/watch?v=09R8_2nJtjg' },
-            { name: 'OneRepublic - Counting Stars', url: 'https://www.youtube.com/watch?v=hT_nvWreIhg' },
-            { name: 'Ed Sheeran - Perfect', url: 'https://www.youtube.com/watch?v=2Vv-BfVoq4g' },
-            { name: 'Tones and I - Dance Monkey', url: 'https://www.youtube.com/watch?v=q0hyYWKXF0Q' },
-            { name: 'The Weeknd - Blinding Lights', url: 'https://www.youtube.com/watch?v=4NRXx6U8ABQ' },
-            { name: 'Imagine Dragons - Believer', url: 'https://www.youtube.com/watch?v=7qu1nvxaA0I' },
-            { name: 'Avicii - Wake Me Up', url: 'https://www.youtube.com/watch?v=IcrbM1l_BoI' },
-            { name: 'Shakira - Waka Waka', url: 'https://www.youtube.com/watch?v=pRpeEdMmmQ0' },
-            { name: 'Michael Jackson - Billie Jean', url: 'https://www.youtube.com/watch?v=Zi_XLOBDo_Y' },
-            { name: 'Justin Bieber - Baby', url: 'https://www.youtube.com/watch?v=kffacxfA7G4' },
-            { name: 'Katy Perry - Roar', url: 'https://www.youtube.com/watch?v=CevxZvSJLk8' },
-            { name: 'Taylor Swift - Blank Space', url: 'https://www.youtube.com/watch?v=e-ORhEE9VVg' },
-            { name: 'Billie Eilish - bad guy', url: 'https://www.youtube.com/watch?v=DyDfgMOUjCI' },
-            { name: 'Eminem - Lose Yourself', url: 'https://www.youtube.com/watch?v=_Yhyp-_hX2s' },
-            { name: 'Linkin Park - In the End', url: 'https://www.youtube.com/watch?v=eVTXPUF4Oz4' },
-            { name: 'Daft Punk - Get Lucky', url: 'https://www.youtube.com/watch?v=5NV6Rdv1a3I' },
-            { name: 'Pharrell Williams - Happy', url: 'https://www.youtube.com/watch?v=y6Sxv-sUYtM' },
-            { name: 'Adele - Rolling in the Deep', url: 'https://www.youtube.com/watch?v=rYEDA3JcQqw' },
-            { name: 'Martin Garrix - Animals', url: 'https://www.youtube.com/watch?v=gCcx85zbxz4' },
-            { name: 'David Guetta - Titanium', url: 'https://www.youtube.com/watch?v=JRfuAukYTKg' },
-            { name: 'Calvin Harris - Summer', url: 'https://www.youtube.com/watch?v=ebXbLfLACGM' },
-            { name: 'Passenger - Let Her Go', url: 'https://www.youtube.com/watch?v=RB-RcX5DS5A' },
-            { name: 'Gotye - Somebody That I Used to Know', url: 'https://www.youtube.com/watch?v=8UVNT4wvIGY' },
-            { name: 'Lukas Graham - 7 Years', url: 'https://www.youtube.com/watch?v=LHCob76kigA' },
-            { name: 'Shawn Mendes - Señorita', url: 'https://www.youtube.com/watch?v=Pkh8UtuejGw' },
-            { name: 'Harry Styles - As It Was', url: 'https://www.youtube.com/watch?v=H5v3kku4y6Q' },
-            { name: 'The Chainsmokers - Closer', url: 'https://www.youtube.com/watch?v=PT2_F-1esPk' },
-            { name: 'Coldplay - Viva La Vida', url: 'https://www.youtube.com/watch?v=dvgZkm1xWPE' },
-            { name: 'Avicii - Levels', url: 'https://www.youtube.com/watch?v=_ovdm2yX4UA' },
-            { name: 'Sia - Chandelier', url: 'https://www.youtube.com/watch?v=2v-BfVoq4g' },
-            { name: 'Rihanna - Diamonds', url: 'https://www.youtube.com/watch?v=lWA2pjMjpBs' },
-            { name: 'Maroon 5 - Memories', url: 'https://www.youtube.com/watch?v=SlPhMPnQ58k' },
-            { name: 'Post Malone - Circles', url: 'https://www.youtube.com/watch?v=wXhTHyIgQ_U' },
-            { name: 'The Kid LAROI - STAY', url: 'https://www.youtube.com/watch?v=kTlv5_Bs8aw' },
-            { name: 'Miley Cyrus - Flowers', url: 'https://www.youtube.com/watch?v=G7KNLW9QMVk' },
-            { name: 'Sam Smith - Unholy', url: 'https://www.youtube.com/watch?v=Uq9gPaAKiy8' },
-            { name: 'David Guetta - I\'m Good', url: 'https://www.youtube.com/watch?v=0p_1QSUsbsM' },
-            { name: 'Glass Animals - Heat Waves', url: 'https://www.youtube.com/watch?v=mRD0-C5tjiE' },
-            { name: 'Benson Boone - Beautiful Things', url: 'https://www.youtube.com/watch?v=Oa_HXzGgzno' },
-            { name: 'Teddy Swims - Lose Control', url: 'https://www.youtube.com/watch?v=GqH21LEmfbQ' },
-            { name: 'Sabrina Carpenter - Espresso', url: 'https://www.youtube.com/watch?v=eVTXPUF4Oz4' },
-            { name: 'Billie Eilish - BIRDS OF A FEATHER', url: 'https://www.youtube.com/watch?v=dMa3-TTGb44' },
-            { name: 'Post Malone - I Had Some Help', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
-            { name: 'Eminem - Without Me', url: 'https://www.youtube.com/watch?v=YVkUvmDQ3HY' },
-            { name: 'Michael Jackson - Smooth Criminal', url: 'https://www.youtube.com/watch?v=h_D3VFfhvs4' },
-            { name: 'Shakira - Hips Don\'t Lie', url: 'https://www.youtube.com/watch?v=DUT5rEU6pqM' },
-            { name: 'Katy Perry - Dark Horse', url: 'https://www.youtube.com/watch?v=0KSOMA3QBU0' },
-            { name: 'Taylor Swift - Shake It Off', url: 'https://www.youtube.com/watch?v=nfWlot6h_JM' },
-            { name: 'Rihanna - Umbrella', url: 'https://www.youtube.com/watch?v=CvBfHwUxHIg' },
-            { name: 'Coldplay - Something Just Like This', url: 'https://www.youtube.com/watch?v=FM7MFyoylVs' },
-            { name: 'Imagine Dragons - Thunder', url: 'https://www.youtube.com/watch?v=fKopy74WEyk' },
-            { name: 'The Weeknd - Starboy', url: 'https://www.youtube.com/watch?v=34Na4j8AVgA' },
-            { name: 'Calvin Harris - Feels', url: 'https://www.youtube.com/watch?v=ODJPgrsbnXM' },
-            { name: 'Alan Walker - Faded', url: 'https://www.youtube.com/watch?v=60ItHLz5WEA' },
-            { name: 'Justin Bieber - Sorry', url: 'https://www.youtube.com/watch?v=fRh_vgS2dFE' },
-            { name: 'Drake - God\'s Plan', url: 'https://www.youtube.com/watch?v=xpVfcZ0ZcFM' },
-            { name: 'Travis Scott - HIGHEST IN THE ROOM', url: 'https://www.youtube.com/watch?v=tfSS1e3kYeo' },
-            { name: 'Bad Bunny - Tití Me Preguntó', url: 'https://www.youtube.com/watch?v=Cr8K88UcO0s' },
-            { name: 'ROSALÍA - DESPECHÁ', url: 'https://www.youtube.com/watch?v=e_04ZrNroTo' },
-            { name: 'J Balvin - Mi Gente', url: 'https://www.youtube.com/watch?v=wnJ6LuUFpMo' },
-            { name: 'Jason Derulo - Swalla', url: 'https://www.youtube.com/watch?v=Nio9LznqLnM' },
-            { name: 'Enrique Iglesias - Bailando', url: 'https://www.youtube.com/watch?v=NUsoVlDFqZg' },
-            { name: 'Sean Paul - Temperature', url: 'https://www.youtube.com/watch?v=ev4mJWXniYs' },
-            { name: 'Kesha - TiK ToK', url: 'https://www.youtube.com/watch?v=iP6XpLQM2Cs' },
-            { name: 'Lady Gaga - Bad Romance', url: 'https://www.youtube.com/watch?v=qrO4zZxHEcI' },
-            { name: 'Guns N\' Roses - Sweet Child O\' Mine', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
-            { name: 'Queen - We Will Rock You', url: 'https://www.youtube.com/watch?v=-tJYN-eG1zk' }
-        ];
+            { name: 'Wellhello - Apuveddmeg', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
+            { name: 'Bagossy Brothers Company - Olyan Ő', url: 'https://www.youtube.com/watch?v=7oJ4HnLq2M8' },
+            { name: 'Majka & Curtis - Belehalok', url: 'https://www.youtube.com/watch?v=4H1W7k8gQ1o' },
+            { name: 'Halott Pénz - Valami van a levegőben', url: 'https://www.youtube.com/watch?v=ArTbyFQpQ_8' },
+            { name: 'Follow The Flow - Nem tudja senki', url: 'https://www.youtube.com/watch?v=dMa3-TTGb44' },
+            { name: 'Azahriah x Desh - Pullup', url: 'https://www.youtube.com/watch?v=3V9741s4gfc' },
+            { name: 'T.Danny - Utolsó alkalom', url: 'https://www.youtube.com/watch?v=1G4isv_Fylg' },
+            { name: 'Manuel - Zöld a szemem', url: 'https://www.youtube.com/watch?v=TUVcZfQe-Kw' },
+            { name: 'BSW - Bajnokok', url: 'https://www.youtube.com/watch?v=60ItHLz5WEA' },
+            { name: 'Krúbi - Pesti Srác', url: 'https://www.youtube.com/watch?v=JGwWNGJdvx8' },
+            { name: 'Dzsúdló - Levegő', url: 'https://www.youtube.com/watch?v=09R8_2nJtjg' },
+            { name: 'Kowalsky meg a Vega - Varázsvilág', url: 'https://www.youtube.com/watch?v=0wVq08o37sw' },
+            { name: 'Quimby - Most múlik pontosan', url: 'https://www.youtube.com/watch?v=1m8v7y4X8iQ' },
+            { name: 'AWS - Viszlát nyár', url: 'https://www.youtube.com/watch?v=W12_1G3W56A' },
+            { name: 'Margaret Island - Eső', url: 'https://www.youtube.com/watch?v=3vK1x9Z9W8c' },
+            { name: 'Punnany Massif - Élvezd', url: 'https://www.youtube.com/watch?v=k7G4kffacxf' },
+            { name: 'Rúzsa Magdi - Ég és föld', url: 'https://www.youtube.com/watch?v=4d5e6f7g8h9' },
+            { name: 'Blahalouisana - Itt élni jó', url: 'https://www.youtube.com/watch?v=0j1k2l3m4n5' },
+            { name: 'Intim Torna Illegál - A tenger', url: 'https://www.youtube.com/watch?v=9i0j1k2l3m4' },
+            { name: 'Compact Disco - Sound of Our Hearts', url: 'https://www.youtube.com/watch?v=7g8h9i0j1k2' },
+            { name: 'Parno Graszt - Már nem szédülök', url: 'https://www.youtube.com/watch?v=1b2c3d4e5f6' },
+            { name: 'Bëlga - Nemzeti hip-hop', url: 'https://www.youtube.com/watch?v=8a9b0c1d2e3' },
+            { name: 'Vad Fruttik - Darabok', url: 'https://www.youtube.com/watch?v=8h9i0j1k2l3' },
+            { name: 'Caramel - Szállj', url: 'https://www.youtube.com/watch?v=6f7g8h9i0j1' },
+            { name: 'Pápai Joci - Origo', url: 'https://www.youtube.com/watch?v=7oJ4HnLq2M8' },
+            { name: 'Kies - Nyári eső', url: 'https://www.youtube.com/watch?v=4H1W7k8gQ1o' },
+            { name: 'Fish! - Gyere ki a grundra', url: 'https://www.youtube.com/watch?v=3vK1x9Z9W8c' },
+            { name: 'Honeybeast - A legnagyobb hős', url: 'https://www.youtube.com/watch?v=0N6w0J8m4rQ' },
+            { name: 'Kaukázus - Tartós béke', url: 'https://www.youtube.com/watch?v=W12_1G3W56A' },
+            { name: 'Road - Nem kell más', url: 'https://www.youtube.com/watch?v=7qu1nvxaA0I' },
+            { name: 'Azahriah - Four Moods', url: 'https://www.youtube.com/watch?v=3V9741s4gfc' },
+            { name: 'ValMar - Szίσza', url: 'https://www.youtube.com/watch?v=7qu1nvxaA0I' },
+            { name: 'Tankcsapda - Jön a világ', url: 'https://www.youtube.com/watch?v=BJceRTvD9Fo' },
+            { name: 'Kowalsky meg a Vega - Hogy vagy, kedves?', url: 'https://www.youtube.com/watch?v=0wVq08o37sw' },
+            { name: 'Quimby - Ajándék', url: 'https://www.youtube.com/watch?v=1m8v7y4X8iQ' },
+            { name: 'Rúzsa Magdi - Jel', url: 'https://www.youtube.com/watch?v=4d5e6f7g8h9' },
+            { name: 'Ákos - Új törvény', url: 'https://www.youtube.com/watch?v=5e6f7g8h9i0' },
+            { name: 'Punnany Massif - Hétköznapi Hősök', url: 'https://www.youtube.com/watch?v=k7G4kffacxf' },
+            { name: 'Krúbi - Szív', url: 'https://www.youtube.com/watch?v=JGwWNGJdvx8' },
+            { name: 'Dzsúdló - Köszönöm', url: 'https://www.youtube.com/watch?v=09R8_2nJtjg' },
+            { name: 'Manuel - Barát', url: 'https://www.youtube.com/watch?v=TUVcZfQe-Kw' },
+            { name: 'T.Danny - Magna Cum Laude', url: 'https://www.youtube.com/watch?v=1G4isv_Fylg' },
+            { name: 'Margaret Island - Veled minden', url: 'https://www.youtube.com/watch?v=3vK1x9Z9W8c' },
+            { name: 'Blahalouisana - Nem akarok kikelni az ágyból', url: 'https://www.youtube.com/watch?v=0j1k2l3m4n5' },
+            { name: 'Vad Fruttik - Nekem senkim sincsen', url: 'https://www.youtube.com/watch?v=8h9i0j1k2l3' },
+            { name: 'Caramel - Lélekűrt', url: 'https://www.youtube.com/watch?v=6f7g8h9i0j1' },
+            { name: 'Pápai Joci - Ne nézz így rám', url: 'https://www.youtube.com/watch?v=7oJ4HnLq2M8' },
+            { name: 'Honeybeast - Egoista', url: 'https://www.youtube.com/watch?v=0N6w0J8m4rQ' },
+            { name: 'ByeAlex - Fekete', url: 'https://www.youtube.com/watch?v=9Q4x2w1_1kE' },
+            { name: 'Irie Maffia - Bad Boy', url: 'https://www.youtube.com/watch?v=3c4d5e6f7g8' },
+            { name: 'Bëlga - Kikelet', url: 'https://www.youtube.com/watch?v=8a9b0c1d2e3' },
+            { name: 'Supernem - Szabad vagy', url: 'https://www.youtube.com/watch?v=dMa3-TTGb44' },
+            { name: 'Fish! - Talpaltató', url: 'https://www.youtube.com/watch?v=3vK1x9Z9W8c' },
+            { name: 'Road - Golgota', url: 'https://www.youtube.com/watch?v=7qu1nvxaA0I' },
+            { name: 'Esti Kornél - Föld', url: 'https://www.youtube.com/watch?v=4d5e6f7g8h9' },
+            { name: 'Fran Palermo - Sunshine', url: 'https://www.youtube.com/watch?v=5e6f7g8h9i0' },
+            { name: 'Pogány Induló - Budapest', url: 'https://www.youtube.com/watch?v=9i0j1k2l3m4' },
+            { name: 'Brains - Days', url: 'https://www.youtube.com/watch?v=1G4isv_Fylg' },
+            { name: 'Hősök - De igen', url: 'https://www.youtube.com/watch?v=g0fgtTQY' },
+            { name: 'Compact Disco - Fly', url: 'https://www.youtube.com/watch?v=7g8h9i0j1k2' },
+            { name: 'Parno Graszt - Olah', url: 'https://www.youtube.com/watch?v=1b2c3d4e5f6' },
+            { name: 'Kies - Szürke', url: 'https://www.youtube.com/watch?v=4H1W7k8gQ1o' },
+            { name: 'Heaven Street Seven - Sajnálom', url: 'https://www.youtube.com/watch?v=k7G4kffacxf' },
+            { name: 'Pál Utcai Fiúk - Tűz', url: 'https://www.youtube.com/watch?v=ArTbyFQpQ_8' },
+            { name: 'Kaukázus - Lift', url: 'https://www.youtube.com/watch?v=W12_1G3W56A' },
+            { name: 'Ráday - Rádió', url: 'https://www.youtube.com/watch?v=3c4d5e6f7g8' },
+            { name: 'Sisi - Szabad', url: 'https://www.youtube.com/watch?v=0j1k2l3m4n5' },
+            { name: 'Animal Cannibals - Takarítónő', url: 'https://www.youtube.com/watch?v=1b2c3d4e5f6' },
+            { name: 'Majka - Domino', url: 'https://www.youtube.com/watch?v=4H1W7k8gQ1o' },
+            { name: 'Halott Pénz - Darabokra', url: 'https://www.youtube.com/watch?v=ArTbyFQpQ_8' },
+            { name: 'Wellhello - Késő már', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
+            { name: 'Azahriah - Rét', url: 'https://www.youtube.com/watch?v=3V9741s4gfc' },
+            { name: 'ValMar - Tavasz', url: 'https://www.youtube.com/watch?v=7qu1nvxaA0I' },
+            { name: 'Tankcsapda - Fiúknak', url: 'https://www.youtube.com/watch?v=BJceRTvD9Fo' },
+            { name: 'Kowalsky meg a Vega - Mint egy jel', url: 'https://www.youtube.com/watch?v=0wVq08o37sw' },
+            { name: 'Quimby - Hordalék', url: 'https://www.youtube.com/watch?v=1m8v7y4X8iQ' },
+            { name: 'Dua Lipa - Levitating', url: 'https://www.youtube.com/watch?v=TUVcZfQe-Kw' },
+            { name: 'Dua Lipa - New Rules', url: 'https://www.youtube.com/watch?v=k2qgadSvNyU' },
+            { name: 'Dua Lipa - Don\'t Start Now', url: 'https://www.youtube.com/watch?v=oygrmJFKYZY' },
+            { name: 'Pitbull - Timber ft. Kesha', url: 'https://www.youtube.com/watch?v=hHUbLv4ThOo' },
+            { name: 'Pitbull - Fireball ft. John Ryan', url: 'https://www.youtube.com/watch?v=HMzP_aJg77Q' },
+            { name: 'Pitbull - Give Me Everything ft. Ne-Yo', url: 'https://www.youtube.com/watch?v=EPo5wWmKEaI' },
+            { name: 'Pitbull - Hotel Room Service', url: 'https://www.youtube.com/watch?v=kB5pJv4bLIA' },
+            { name: 'Pitbull - I Know You Want Me', url: 'https://www.youtube.com/watch?v=E_dZzYIU-QQ' },
+            { name: 'Luis Fonsi - Despacito', url: 'https://www.youtube.com/watch?v=kJQP7kiw5Fk' },
+            { name: 'Ed Sheeran - Shape of You', url: 'https://www.youtube.com/watch?v=JGwWNGJdvx8' },
+            { name: 'Wiz Khalifa - See You Again', url: 'https://www.youtube.com/watch?v=RgKAFK5djSk' },
+            { name: 'Mark Ronson - Uptown Funk', url: 'https://www.youtube.com/watch?v=OPf0YbXqDm0' },
+            { name: 'Psy - Gangnam Style', url: 'https://www.youtube.com/watch?v=9bZkp7q19f0' },
+            { name: 'Maroon 5 - Sugar', url: 'https://www.youtube.com/watch?v=09R8_2nJtjg' },
+            { name: 'OneRepublic - Counting Stars', url: 'https://www.youtube.com/watch?v=hT_nvWreIhg' },
+            { name: 'Ed Sheeran - Perfect', url: 'https://www.youtube.com/watch?v=2Vv-BfVoq4g' },
+            { name: 'Tones and I - Dance Monkey', url: 'https://www.youtube.com/watch?v=q0hyYWKXF0Q' },
+            { name: 'The Weeknd - Blinding Lights', url: 'https://www.youtube.com/watch?v=4NRXx6U8ABQ' },
+            { name: 'Imagine Dragons - Believer', url: 'https://www.youtube.com/watch?v=7qu1nvxaA0I' },
+            { name: 'Avicii - Wake Me Up', url: 'https://www.youtube.com/watch?v=IcrbM1l_BoI' },
+            { name: 'Shakira - Waka Waka', url: 'https://www.youtube.com/watch?v=pRpeEdMmmQ0' },
+            { name: 'Michael Jackson - Billie Jean', url: 'https://www.youtube.com/watch?v=Zi_XLOBDo_Y' },
+            { name: 'Justin Bieber - Baby', url: 'https://www.youtube.com/watch?v=kffacxfA7G4' },
+            { name: 'Katy Perry - Roar', url: 'https://www.youtube.com/watch?v=CevxZvSJLk8' },
+            { name: 'Taylor Swift - Blank Space', url: 'https://www.youtube.com/watch?v=e-ORhEE9VVg' },
+            { name: 'Billie Eilish - bad guy', url: 'https://www.youtube.com/watch?v=DyDfgMOUjCI' },
+            { name: 'Eminem - Lose Yourself', url: 'https://www.youtube.com/watch?v=_Yhyp-_hX2s' },
+            { name: 'Linkin Park - In the End', url: 'https://www.youtube.com/watch?v=eVTXPUF4Oz4' },
+            { name: 'Daft Punk - Get Lucky', url: 'https://www.youtube.com/watch?v=5NV6Rdv1a3I' },
+            { name: 'Pharrell Williams - Happy', url: 'https://www.youtube.com/watch?v=y6Sxv-sUYtM' },
+            { name: 'Adele - Rolling in the Deep', url: 'https://www.youtube.com/watch?v=rYEDA3JcQqw' },
+            { name: 'Martin Garrix - Animals', url: 'https://www.youtube.com/watch?v=gCcx85zbxz4' },
+            { name: 'David Guetta - Titanium', url: 'https://www.youtube.com/watch?v=JRfuAukYTKg' },
+            { name: 'Calvin Harris - Summer', url: 'https://www.youtube.com/watch?v=ebXbLfLACGM' },
+            { name: 'Passenger - Let Her Go', url: 'https://www.youtube.com/watch?v=RB-RcX5DS5A' },
+            { name: 'Gotye - Somebody That I Used to Know', url: 'https://www.youtube.com/watch?v=8UVNT4wvIGY' },
+            { name: 'Lukas Graham - 7 Years', url: 'https://www.youtube.com/watch?v=LHCob76kigA' },
+            { name: 'Shawn Mendes - Señorita', url: 'https://www.youtube.com/watch?v=Pkh8UtuejGw' },
+            { name: 'Harry Styles - As It Was', url: 'https://www.youtube.com/watch?v=H5v3kku4y6Q' },
+            { name: 'The Chainsmokers - Closer', url: 'https://www.youtube.com/watch?v=PT2_F-1esPk' },
+            { name: 'Coldplay - Viva La Vida', url: 'https://www.youtube.com/watch?v=dvgZkm1xWPE' },
+            { name: 'Avicii - Levels', url: 'https://www.youtube.com/watch?v=_ovdm2yX4UA' },
+            { name: 'Sia - Chandelier', url: 'https://www.youtube.com/watch?v=2v-BfVoq4g' },
+            { name: 'Rihanna - Diamonds', url: 'https://www.youtube.com/watch?v=lWA2pjMjpBs' },
+            { name: 'Maroon 5 - Memories', url: 'https://www.youtube.com/watch?v=SlPhMPnQ58k' },
+            { name: 'Post Malone - Circles', url: 'https://www.youtube.com/watch?v=wXhTHyIgQ_U' },
+            { name: 'The Kid LAROI - STAY', url: 'https://www.youtube.com/watch?v=kTlv5_Bs8aw' },
+            { name: 'Miley Cyrus - Flowers', url: 'https://www.youtube.com/watch?v=G7KNLW9QMVk' },
+            { name: 'Sam Smith - Unholy', url: 'https://www.youtube.com/watch?v=Uq9gPaAKiy8' },
+            { name: 'David Guetta - I\'m Good', url: 'https://www.youtube.com/watch?v=0p_1QSUsbsM' },
+            { name: 'Glass Animals - Heat Waves', url: 'https://www.youtube.com/watch?v=mRD0-C5tjiE' },
+            { name: 'Benson Boone - Beautiful Things', url: 'https://www.youtube.com/watch?v=Oa_HXzGgzno' },
+            { name: 'Teddy Swims - Lose Control', url: 'https://www.youtube.com/watch?v=GqH21LEmfbQ' },
+            { name: 'Sabrina Carpenter - Espresso', url: 'https://www.youtube.com/watch?v=eVTXPUF4Oz4' },
+            { name: 'Billie Eilish - BIRDS OF A FEATHER', url: 'https://www.youtube.com/watch?v=dMa3-TTGb44' },
+            { name: 'Post Malone - I Had Some Help', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
+            { name: 'Eminem - Without Me', url: 'https://www.youtube.com/watch?v=YVkUvmDQ3HY' },
+            { name: 'Michael Jackson - Smooth Criminal', url: 'https://www.youtube.com/watch?v=h_D3VFfhvs4' },
+            { name: 'Shakira - Hips Don\'t Lie', url: 'https://www.youtube.com/watch?v=DUT5rEU6pqM' },
+            { name: 'Katy Perry - Dark Horse', url: 'https://www.youtube.com/watch?v=0KSOMA3QBU0' },
+            { name: 'Taylor Swift - Shake It Off', url: 'https://www.youtube.com/watch?v=nfWlot6h_JM' },
+            { name: 'Rihanna - Umbrella', url: 'https://www.youtube.com/watch?v=CvBfHwUxHIg' },
+            { name: 'Coldplay - Something Just Like This', url: 'https://www.youtube.com/watch?v=FM7MFyoylVs' },
+            { name: 'Imagine Dragons - Thunder', url: 'https://www.youtube.com/watch?v=fKopy74WEyk' },
+            { name: 'The Weeknd - Starboy', url: 'https://www.youtube.com/watch?v=34Na4j8AVgA' },
+            { name: 'Calvin Harris - Feels', url: 'https://www.youtube.com/watch?v=ODJPgrsbnXM' },
+            { name: 'Alan Walker - Faded', url: 'https://www.youtube.com/watch?v=60ItHLz5WEA' },
+            { name: 'Justin Bieber - Sorry', url: 'https://www.youtube.com/watch?v=fRh_vgS2dFE' },
+            { name: 'Drake - God\'s Plan', url: 'https://www.youtube.com/watch?v=xpVfcZ0ZcFM' },
+            { name: 'Travis Scott - HIGHEST IN THE ROOM', url: 'https://www.youtube.com/watch?v=tfSS1e3kYeo' },
+            { name: 'Bad Bunny - Tití Me Preguntó', url: 'https://www.youtube.com/watch?v=Cr8K88UcO0s' },
+            { name: 'ROSALÍA - DESPECHÁ', url: 'https://www.youtube.com/watch?v=e_04ZrNroTo' },
+            { name: 'J Balvin - Mi Gente', url: 'https://www.youtube.com/watch?v=wnJ6LuUFpMo' },
+            { name: 'Jason Derulo - Swalla', url: 'https://www.youtube.com/watch?v=Nio9LznqLnM' },
+            { name: 'Enrique Iglesias - Bailando', url: 'https://www.youtube.com/watch?v=NUsoVlDFqZg' },
+            { name: 'Sean Paul - Temperature', url: 'https://www.youtube.com/watch?v=ev4mJWXniYs' },
+            { name: 'Kesha - TiK ToK', url: 'https://www.youtube.com/watch?v=iP6XpLQM2Cs' },
+            { name: 'Lady Gaga - Bad Romance', url: 'https://www.youtube.com/watch?v=qrO4zZxHEcI' },
+            { name: 'Guns N\' Roses - Sweet Child O\' Mine', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
+            { name: 'Queen - We Will Rock You', url: 'https://www.youtube.com/watch?v=-tJYN-eG1zk' }
+        ];
 
         function getYouTubeId(url) {
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -311,6 +312,7 @@
         }
 
         let ytPlayer = null;
+        let isPlayerReady = false;
         let isPaused = false;
         let isMuted = false;
         let previousVolume = 80;
@@ -324,17 +326,25 @@
         const muteIcon = document.getElementById('mute-icon');
 
         function onYouTubeIframeAPIReady() {
-            try {
-                ytPlayer = new YT.Player('yt-player', {
-                    height: '200',
-                    width: '200',
-                    playerVars: { 'autoplay': 0, 'controls': 0, 'enablejsapi': 1 },
-                    events: { 
-                        'onStateChange': onPlayerStateChange, 
-                        'onError': onPlayerError 
-                    }
-                });
-            } catch (e) {}
+            ytPlayer = new YT.Player('yt-player', {
+                height: '200',
+                width: '200',
+                playerVars: { 'autoplay': 0, 'controls': 0, 'enablejsapi': 1, 'origin': window.location.origin },
+                events: { 
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange, 
+                    'onError': onPlayerError 
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            isPlayerReady = true;
+            mainToggleBtn.removeAttribute('disabled');
+            mainToggleBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btnIcon.className = 'fa-solid fa-play';
+            btnText.textContent = 'LEJÁTSZÁS';
+            playlistTitle.textContent = 'Készenlétben';
         }
 
         function playClickSound() {
@@ -355,7 +365,7 @@
         }
 
         function startPlayback() {
-            if (!ytPlayer || typeof ytPlayer.loadVideoById !== 'function') return;
+            if (!isPlayerReady || !ytPlayer) return;
 
             if (isPaused) {
                 ytPlayer.playVideo();
@@ -373,17 +383,19 @@
         }
 
         function stopPlayback() {
-            if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+            if (ytPlayer && ytPlayer.pauseVideo) {
+                ytPlayer.pauseVideo();
+            }
             isPaused = true;
             updateUIState(false);
         }
 
         function togglePlayback() {
+            if (!isPlayerReady) return;
             playClickSound();
-            const state = ytPlayer.getPlayerState();
             
-            // Ha épp játszik (1) vagy pufferel (3)
-            if (state === 1 || state === 3) {
+            const state = ytPlayer.getPlayerState();
+            if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) {
                 stopPlayback();
             } else {
                 startPlayback();
