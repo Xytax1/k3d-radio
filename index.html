@@ -157,8 +157,7 @@
             { name: 'Tankcsapda - Mennyország tourist', url: 'https://www.youtube.com/watch?v=BJceRTvD9Fo' },
             { name: 'Halott Pénz - Valami van a levegőben', url: 'https://www.youtube.com/watch?v=ArTbyFQpQ_8' },
             { name: 'Follow The Flow - Nem tudja senki', url: 'https://www.youtube.com/watch?v=dMa3-TTGb44' },
-            { name: 'Punnany Massif - Élvezd', url: 'https://www.youtube.com/watch?v=k7G4kffacxf' },
-            // ... (a többi dalod itt folytatódik)
+            { name: 'Punnany Massif - Élvezd', url: 'https://www.youtube.com/watch?v=k7G4kffacxf' }
         ];
 
         function getYouTubeId(url) {
@@ -265,13 +264,15 @@
 
         function updateUIState(playing) {
             if (playing) {
-                mainToggleBtn.classList.replace('btn-mc-stop', 'btn-mc-play');
-                btnIcon.className = 'fa-solid fa-play';
-                btnText.textContent = 'LEJÁTSZÁS';
-            } else {
+                // Ha épp szól, a gomb legyen LEÁLLÍTÁS stílusú
                 mainToggleBtn.classList.replace('btn-mc-play', 'btn-mc-stop');
                 btnIcon.className = 'fa-solid fa-square';
                 btnText.textContent = 'LEÁLLÍTÁS';
+            } else {
+                // Ha áll, a gomb legyen LEJÁTSZÁS stílusú
+                mainToggleBtn.classList.replace('btn-mc-stop', 'btn-mc-play');
+                btnIcon.className = 'fa-solid fa-play';
+                btnText.textContent = 'LEJÁTSZÁS';
             }
         }
 
