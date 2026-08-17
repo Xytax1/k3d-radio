@@ -11,38 +11,117 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
     <style>
-        * { image-rendering: pixelated; font-family: 'Press Start 2P', monospace; user-select: none; }
-        body { background-color: #0b0e14; min-height: 100vh; }
-        .mc-card { background-color: #866043; background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/dirt.png'); background-size: 32px 32px; border: 5px solid #000000; box-shadow: 8px 8px 0px 0px #000000; }
-        .mc-header { background-color: #5c8e32; background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/grass_block_top.png'); background-size: 32px 32px; filter: sepia(1) hue-rotate(50deg) saturate(3) brightness(0.8); border-bottom: 5px solid #000000; }
-        .mc-inner-box { background-color: #1e1e1e; background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/deepslate.png'); background-size: 32px 32px; border: 4px solid #000000; }
-        .btn-mc-play { background: #a80000; background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/redstone_block.png'); background-size: 32px 32px; border: 4px solid #000000; color: #ffffff; text-shadow: 2px 2px #000000; }
+        * {
+            image-rendering: pixelated;
+            font-family: 'Press Start 2P', monospace;
+            user-select: none;
+        }
+
+        body {
+            background-color: #0b0e14;
+            min-height: 100vh;
+        }
+
+        .mc-card {
+            background-color: #866043;
+            background-image: url('https://cdn.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.20.1/assets/minecraft/textures/block/dirt.png');
+            background-size: 32px 32px;
+            border: 5px solid #000000;
+            box-shadow: 8px 8px 0px 0px #000000;
+        }
+
+        .mc-header {
+            background-color: #5c8e32;
+            background-image: url('https://cdn.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.20.1/assets/minecraft/textures/block/grass_block_top.png');
+            background-size: 32px 32px;
+            filter: sepia(1) hue-rotate(50deg) saturate(3) brightness(0.8);
+            border-bottom: 5px solid #000000;
+        }
+
+        .mc-inner-box {
+            background-color: #1e1e1e;
+            background-image: url('https://cdn.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.20.1/assets/minecraft/textures/block/deepslate.png');
+            background-size: 32px 32px;
+            border: 4px solid #000000;
+        }
+
+        .btn-mc-play {
+            background: #a80000;
+            background-image: url('https://cdn.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.20.1/assets/minecraft/textures/block/redstone_block.png');
+            background-size: 32px 32px;
+            border: 4px solid #000000;
+            color: #ffffff;
+            text-shadow: 2px 2px #000000;
+        }
         .btn-mc-play:hover { filter: brightness(1.2); }
-        .btn-mc-stop { background: #008b8b; background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/diamond_block.png'); background-size: 32px 32px; border: 4px solid #000000; color: #ffffff; text-shadow: 2px 2px #000000; }
+
+        .btn-mc-stop {
+            background: #008b8b;
+            background-image: url('https://cdn.jsdelivr.net/gh/InventivetalentDev/minecraft-assets@1.20.1/assets/minecraft/textures/block/diamond_block.png');
+            background-size: 32px 32px;
+            border: 4px solid #000000;
+            color: #ffffff;
+            text-shadow: 2px 2px #000000;
+        }
         .btn-mc-stop:hover { filter: brightness(1.2); }
-        input[type=range] { -webkit-appearance: none; background: #111111; border: 2px solid #000000; height: 10px; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 22px; width: 12px; background: #55ff55; border: 2px solid #000000; cursor: default; border-radius: 0px; }
-        #youtube-player-container { position: absolute; width: 200px; height: 200px; overflow: hidden; opacity: 0; pointer-events: none; z-index: -999; }
-        @keyframes livePulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .live-dot { animation: livePulse 1.5s infinite; }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            background: #111111;
+            border: 2px solid #000000;
+            height: 10px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 22px;
+            width: 12px;
+            background: #55ff55;
+            border: 2px solid #000000;
+            cursor: default;
+            border-radius: 0px;
+        }
+
+        #youtube-player-container {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            z-index: -999;
+        }
+
+        @keyframes livePulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        .live-dot {
+            animation: livePulse 1.5s infinite;
+        }
     </style>
 </head>
 <body class="flex items-center justify-center p-4">
 
-    <div id="youtube-player-container"><div id="yt-player"></div></div>
+    <div id="youtube-player-container">
+        <div id="yt-player"></div>
+    </div>
 
     <div class="mc-card w-full max-w-md text-white text-center relative my-4">
+        
         <div class="mc-header py-7 px-6 text-left">
-            <h1 class="text-xl sm:text-2xl text-yellow-300 tracking-wider drop-shadow-[3px_3px_0_#000]">K3D RÁDIÓ</h1>
-            <div class="text-[10px] text-gray-300 mt-2 font-mono">
-                Élő hallgatók: <span id="online-count" class="text-yellow-200">1</span>
-            </div>
+            <h1 class="text-xl sm:text-2xl text-yellow-300 tracking-wider drop-shadow-[3px_3px_0_#000]">
+                K3D RÁDIÓ
+            </h1>
         </div>
 
         <div class="p-6">
             <div class="mc-inner-box p-5 mb-5 text-center">
                 <div class="text-[10px] text-white uppercase mb-2 [text-shadow:_1px_1px_0_#000]">JUKEBOX LEJÁTSZÓ</div>
-                <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3 [text-shadow:_2px_2px_0_#000]">Betöltés...</div>
+                <div id="playlist-title" class="text-xs sm:text-sm text-yellow-400 truncate mb-3 [text-shadow:_2px_2px_0_#000]">
+                    Betöltés...
+                </div>
                 <div class="text-[10px] text-red-500 font-bold flex items-center justify-center gap-1 [text-shadow:_1px_1px_0_#000]">
                     <span class="live-dot">●</span> ÉLŐ RÁDIÓ
                 </div>
@@ -65,20 +144,8 @@
     </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script>
-        // Hallgatók száma logika
-        function updateCounter() {
-            const chance = Math.random();
-            let count;
-            if (chance < 0.6) {
-                count = Math.random() < 0.5 ? 1 : 3;
-            } else {
-                count = Math.floor(Math.random() * 19) + 2;
-            }
-            document.getElementById('online-count').textContent = count;
-        }
-        setInterval(updateCounter, 3000);
 
+    <script>
         const tracks = [
             { name: 'Wellhello - Apuveddmeg', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
             { name: 'Bagossy Brothers Company - Olyan Ő', url: 'https://www.youtube.com/watch?v=7oJ4HnLq2M8' },
@@ -225,7 +292,7 @@
             { name: 'Guns N\' Roses - Sweet Child O\' Mine', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
             { name: 'Queen - We Will Rock You', url: 'https://www.youtube.com/watch?v=-tJYN-eG1zk' }
         ];
-        
+
         function getYouTubeId(url) {
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(regExp);
@@ -248,9 +315,19 @@
 
         function onYouTubeIframeAPIReady() {
             ytPlayer = new YT.Player('yt-player', {
-                height: '200', width: '200',
-                playerVars: { 'autoplay': 0, 'controls': 0, 'enablejsapi': 1, 'origin': window.location.origin },
-                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange, 'onError': onPlayerError }
+                height: '200',
+                width: '200',
+                playerVars: { 
+                    'autoplay': 0, 
+                    'controls': 0, 
+                    'enablejsapi': 1, 
+                    'origin': window.location.origin 
+                },
+                events: { 
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange, 
+                    'onError': onPlayerError 
+                }
             });
         }
 
@@ -268,22 +345,29 @@
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
-                osc.type = 'square'; osc.frequency.setValueAtTime(400, ctx.currentTime);
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(400, ctx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.05);
                 gain.gain.setValueAtTime(0.1, ctx.currentTime);
                 gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.05);
-                osc.connect(gain); gain.connect(ctx.destination);
-                osc.start(); osc.stop(ctx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.05);
             } catch (e) {}
         }
 
         function startPlayback() {
             if (!isPlayerReady || !ytPlayer) return;
-            if (isPaused) { ytPlayer.playVideo(); isPaused = false; }
-            else {
+
+            if (isPaused) {
+                ytPlayer.playVideo();
+                isPaused = false;
+            } else {
                 const track = tracks[Math.floor(Math.random() * tracks.length)];
                 const videoId = getYouTubeId(track.url);
                 if (!videoId) return;
+
                 playlistTitle.textContent = track.name;
                 ytPlayer.loadVideoById(videoId);
                 ytPlayer.setVolume(volumeSlider.value);
@@ -292,7 +376,9 @@
         }
 
         function stopPlayback() {
-            if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+            if (ytPlayer && ytPlayer.pauseVideo) {
+                ytPlayer.pauseVideo();
+            }
             isPaused = true;
             updateUIState(false);
         }
@@ -300,18 +386,29 @@
         function togglePlayback() {
             if (!isPlayerReady) return;
             playClickSound();
+            
             const state = ytPlayer.getPlayerState();
-            if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) stopPlayback();
-            else startPlayback();
+            if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) {
+                stopPlayback();
+            } else {
+                startPlayback();
+            }
         }
 
         function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.ENDED) { isPaused = false; startPlayback(); }
-            else if (event.data === YT.PlayerState.PLAYING) updateUIState(true);
-            else if (event.data === YT.PlayerState.PAUSED) updateUIState(false);
+            if (event.data === YT.PlayerState.ENDED) {
+                isPaused = false;
+                startPlayback();
+            } else if (event.data === YT.PlayerState.PLAYING) {
+                updateUIState(true);
+            } else if (event.data === YT.PlayerState.PAUSED) {
+                updateUIState(false);
+            }
         }
 
-        function onPlayerError(event) { startPlayback(); }
+        function onPlayerError(event) {
+            startPlayback();
+        }
 
         function updateUIState(playing) {
             if (playing) {
@@ -326,6 +423,7 @@
         }
 
         mainToggleBtn.addEventListener('click', togglePlayback);
+
         volumeSlider.addEventListener('input', (e) => {
             const val = e.target.value;
             if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(val);
