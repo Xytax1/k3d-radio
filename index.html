@@ -13,50 +13,16 @@
     <style>
         * { image-rendering: pixelated; font-family: 'Press Start 2P', monospace; user-select: none; }
         body { background-color: #0b0e14; min-height: 100vh; }
-        
-        .mc-card { 
-            background: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/dirt.png'); 
-            background-size: 32px 32px; 
-            border: 5px solid #000000; 
-            box-shadow: 8px 8px 0px 0px #000000; 
-        }
-        
-        .mc-header { 
-            background: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/grass_block_top.png'); 
-            background-size: 32px 32px; 
-            filter: sepia(1) hue-rotate(50deg) saturate(3) brightness(0.8); 
-            border-bottom: 5px solid #000000; 
-        }
-        
-        .mc-inner-box { 
-            background: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/deepslate.png'); 
-            background-size: 32px 32px; 
-            border: 4px solid #000000; 
-        }
-
-        .btn-mc-play { 
-            background: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/redstone_block.png'); 
-            background-size: 32px 32px; 
-            border: 4px solid #000000; 
-            color: #ffffff; 
-            text-shadow: 2px 2px #000000; 
-        }
+        .mc-card { background-color: #866043; background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/dirt.png'); background-size: 32px 32px; border: 5px solid #000000; box-shadow: 8px 8px 0px 0px #000000; }
+        .mc-header { background-color: #5c8e32; background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/grass_block_top.png'); background-size: 32px 32px; filter: sepia(1) hue-rotate(50deg) saturate(3) brightness(0.8); border-bottom: 5px solid #000000; }
+        .mc-inner-box { background-color: #1e1e1e; background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/deepslate.png'); background-size: 32px 32px; border: 4px solid #000000; }
+        .btn-mc-play { background: #a80000; background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/redstone_block.png'); background-size: 32px 32px; border: 4px solid #000000; color: #ffffff; text-shadow: 2px 2px #000000; }
         .btn-mc-play:hover { filter: brightness(1.2); }
-
-        .btn-mc-stop { 
-            background: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/diamond_block.png'); 
-            background-size: 32px 32px; 
-            border: 4px solid #000000; 
-            color: #ffffff; 
-            text-shadow: 2px 2px #000000; 
-        }
+        .btn-mc-stop { background: #008b8b; background-image: url('https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19/assets/minecraft/textures/block/diamond_block.png'); background-size: 32px 32px; border: 4px solid #000000; color: #ffffff; text-shadow: 2px 2px #000000; }
         .btn-mc-stop:hover { filter: brightness(1.2); }
-
         input[type=range] { -webkit-appearance: none; background: #111111; border: 2px solid #000000; height: 10px; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 22px; width: 12px; background: #55ff55; border: 2px solid #000000; cursor: default; border-radius: 0px; }
-        
         #youtube-player-container { position: absolute; width: 200px; height: 200px; overflow: hidden; opacity: 0; pointer-events: none; z-index: -999; }
-        
         @keyframes livePulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .live-dot { animation: livePulse 1.5s infinite; }
     </style>
@@ -259,7 +225,7 @@
             { name: 'Guns N\' Roses - Sweet Child O\' Mine', url: 'https://www.youtube.com/watch?v=1w7Xw73W4Bc' },
             { name: 'Queen - We Will Rock You', url: 'https://www.youtube.com/watch?v=-tJYN-eG1zk' }
         ];
-
+        
         function getYouTubeId(url) {
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(regExp);
